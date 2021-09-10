@@ -3,6 +3,7 @@ package com.a.compose
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Parcelable
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -29,6 +30,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.a.compose.ui.theme.BaseTheme
 import com.a.compose.ui.theme.ComposeTheme
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.jar.Attributes
 
 class MainActivity : ComponentActivity() {
@@ -36,14 +39,46 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
 //            Conversation(messages = messages)
-//            HelloContent()
+            HelloContent()
 
-            HelloScreen()
+//            TodoList()
+//            LandingScreen {
+//            }
+//            MoviesScreen()
+//            HelloScreen()
 //            MessageCard(msg = Message("Colleague","Hi it body"))
         }
     }
 }
 
+
+@Composable
+fun TodoList(
+    highPriorityKeywords: List<String> = listOf("Review", "Unblock", "Compose")
+) {
+    val todoTasks = remember { mutableStateListOf<String>() }
+
+    // Calculate high priority tasks only when the todoTasks or
+    // highPriorityKeywords change, not on every recomposition
+    val highPriorityTasks by remember(todoTasks, highPriorityKeywords) {
+        derivedStateOf {
+            todoTasks
+//            todoTasks.filter { it.containsWord(highPriorityKeywords) }
+        }
+    }
+
+    Box(Modifier.fillMaxSize()) {
+        LazyColumn {
+            items(highPriorityTasks) {
+                Text(it)
+            }
+            items(todoTasks) {
+                Text(it,color=MaterialTheme.colors.primary)
+            }
+        }
+        /* Rest of the UI where users can add elements to the list */
+    }
+}
 
 
 sealed class WelcomeEvent {
@@ -126,6 +161,57 @@ class HelloViewModel : ViewModel() {
     // (events flow up from UI)
     fun onNameChange(newName: String) {
         _name.value = newName
+    }
+}
+
+data class City(val name: String, val country: String)
+@Composable
+fun CityScreen() {
+    var selectedCity = rememberSaveable {
+        mutableStateOf(City("Madrid", "Spain"))
+    }
+}
+
+val SplashWaitTimeMillis = 3000L
+@Composable
+fun LandingScreen(onTimeout: () -> Unit) {
+
+    // This will always refer to the latest onTimeout function that
+    // LandingScreen was recomposed with
+    val currentOnTimeout by rememberUpdatedState(onTimeout)
+
+    // Create an effect that matches the lifecycle of LandingScreen.
+    // If LandingScreen recomposes, the delay shouldn't start again.
+    LaunchedEffect(true) {
+        delay(SplashWaitTimeMillis)
+        currentOnTimeout()
+    }
+
+    /* Landing screen content */
+}
+
+@Composable
+fun MoviesScreen(scaffoldState: ScaffoldState = rememberScaffoldState()) {
+
+    // Creates a CoroutineScope bound to the MoviesScreen's lifecycle
+    val scope = rememberCoroutineScope()
+
+    Scaffold(scaffoldState = scaffoldState) {
+        Column {
+            /* ... */
+            Button(
+                onClick = {
+                    // Create a new coroutine in the event handler
+                    // to show a snackbar
+                    scope.launch {
+                        scaffoldState.snackbarHostState
+                            .showSnackbar("Something happened!")
+                    }
+                }
+            ) {
+                Text("Press me")
+            }
+        }
     }
 }
 
