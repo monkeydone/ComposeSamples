@@ -2,6 +2,7 @@ package com.a.compose
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,6 +11,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.selection.DisableSelection
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,9 +26,19 @@ import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.*
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.ConstraintSet
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 import kotlin.math.max
@@ -35,8 +49,135 @@ class SampleActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-//            PreviewArtistCard()
-            ChartDataPreview()
+            PreviewArtistCard()
+//            ChartDataPreview()
+//            ScrollBoxes()
+        }
+
+    }
+}
+
+@Preview
+@Composable
+fun ScrollBoxes() {
+    val context = LocalContext.current
+    Column(
+        modifier = Modifier
+            .background(Color.LightGray)
+            .size(800.dp)
+            .verticalScroll(rememberScrollState())
+    ) {
+        repeat(10) {
+            Text("Item $it", modifier = Modifier.padding(2.dp))
+        }
+
+        Text("Hello World")
+        Text(stringResource(R.string.app_name))
+        Text("Hello World", color = Color.Blue)
+        Text("Hello World", fontSize = 30.sp)
+        Text("Hello World", fontStyle = FontStyle.Italic)
+        Text("Hello World", fontWeight = FontWeight.Bold)
+
+        Text("Hello World", textAlign = TextAlign.Center,
+            modifier = Modifier.width(150.dp))
+
+        Text("Hello World", fontFamily = FontFamily.Serif)
+        Text("Hello World", fontFamily = FontFamily.SansSerif)
+
+        Text(
+            buildAnnotatedString {
+                withStyle(style = SpanStyle(color = Color.Blue)) {
+                    append("H")
+                }
+                append("ello ")
+
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, color = Color.Red)) {
+                    append("W")
+                }
+                append("orld")
+            }
+        )
+
+        Text(
+            buildAnnotatedString {
+                withStyle(style = ParagraphStyle(lineHeight = 30.sp)) {
+                    withStyle(style = SpanStyle(color = Color.Blue)) {
+                        append("Hello\n")
+                    }
+                    withStyle(
+                        style = SpanStyle(
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Red
+                        )
+                    ) {
+                        append("World\n")
+                    }
+                    append("Compose")
+                }
+            }
+        )
+
+        Text("hello ".repeat(50), maxLines = 2)
+
+        Text("Hello Compose ".repeat(50), maxLines = 2, overflow = TextOverflow.Ellipsis)
+
+        SelectionContainer {
+            Column {
+                Text("This text is selectable")
+                Text("This one too")
+                Text("This one as well")
+                DisableSelection {
+                    Text("But not this one")
+                    Text("Neither this one")
+                }
+                Text("But again, you can select this one")
+                Text("And this one too")
+            }
+        }
+
+        ClickableText(
+            text = AnnotatedString("Click Me"),
+            onClick = { offset ->
+                Toast.makeText(context,"$offset -th character is clicked.",Toast.LENGTH_LONG).show()
+            }
+        )
+
+    }
+}
+
+@Preview
+@Composable
+fun DecoupledConstraintLayout() {
+    BoxWithConstraints {
+        val constraints = if (minWidth < 600.dp) {
+            decoupledConstraints(margin = 16.dp) // Portrait constraints
+        } else {
+            decoupledConstraints(margin = 32.dp) // Landscape constraints
+        }
+
+        ConstraintLayout(constraints) {
+            Button(
+                onClick = { /* Do something */ },
+                modifier = Modifier.layoutId("button")
+            ) {
+                Text("Button")
+            }
+
+            Text("Text", Modifier.layoutId("text"))
+        }
+    }
+}
+
+private fun decoupledConstraints(margin: Dp): ConstraintSet {
+    return ConstraintSet {
+        val button = createRefFor("button")
+        val text = createRefFor("text")
+
+        constrain(button) {
+            top.linkTo(parent.top, margin = margin)
+        }
+        constrain(text) {
+            top.linkTo(button.bottom, margin)
         }
     }
 }
@@ -316,7 +457,10 @@ fun PreviewArtistCard() {
         }
     }
 
-    LazyColumn {
+    LazyColumn(contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)) {
+        item(){
+            ScrollBoxes()
+        }
         item() {
             MyBasicColumn(Modifier.padding(8.dp)) {
                 Text("MyBasicColumn")
@@ -344,10 +488,11 @@ data class Artist(val logoUrl:String,val name:String ,val desc:String,val workUr
 
 @Composable
 fun ArtistCard(artist: Artist,onClick:()->Unit) {
-    val padding = 16.dp
+    val padding = 4.dp
     Column(
         Modifier
             .padding(all = padding)
+            .background(MaterialTheme.colors.primary)
             .clickable(onClick = onClick)
         ,
         horizontalAlignment = Alignment.CenterHorizontally
