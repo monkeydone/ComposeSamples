@@ -12,10 +12,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.DisableSelection
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,6 +33,8 @@ import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -64,7 +68,7 @@ fun ScrollBoxes() {
     Column(
         modifier = Modifier
             .background(Color.LightGray)
-            .size(800.dp)
+            .size(1000.dp)
             .verticalScroll(rememberScrollState())
     ) {
         repeat(10) {
@@ -141,6 +145,88 @@ fun ScrollBoxes() {
                 Toast.makeText(context,"$offset -th character is clicked.",Toast.LENGTH_LONG).show()
             }
         )
+
+        val annotatedText = buildAnnotatedString {
+            append("Click ")
+
+            // We attach this *URL* annotation to the following content
+            // until `pop()` is called
+            pushStringAnnotation(tag = "URL",
+                annotation = "https://developer.android.com")
+            withStyle(style = SpanStyle(color = Color.Blue,
+                fontWeight = FontWeight.Bold)) {
+                append("here")
+            }
+
+            pop()
+        }
+
+        ClickableText(
+            text = annotatedText,
+            onClick = { offset ->
+                // We check if there is an *URL* annotation attached to the text
+                // at the clicked position
+                annotatedText.getStringAnnotations(tag = "URL", start = offset,
+                    end = offset)
+                    .firstOrNull()?.let { annotation ->
+                        // If yes, we log its value
+                        Toast.makeText(context,"${annotation.item}",Toast.LENGTH_LONG).show()
+
+                        Log.d("Clicked URL", annotation.item)
+                    }
+            }
+        )
+
+
+        var text by remember { mutableStateOf("Hello") }
+
+        TextField(
+            value = text,
+            onValueChange = { text = it },
+            label = { Text("Label") }
+        )
+
+
+        OutlinedTextField(
+            value = text,
+            onValueChange = { text = it },
+            label = { Text("Label") }
+        )
+
+
+        var value by remember { mutableStateOf("Hello\nWorld\nInvisible") }
+
+        TextField(
+            value = value,
+            onValueChange = { value = it },
+            label = { Text("Enter text") },
+            maxLines = 2,
+            textStyle = TextStyle(color = Color.Blue, fontWeight = FontWeight.Bold),
+            modifier = Modifier.padding(20.dp)
+        )
+
+
+        var password by rememberSaveable { mutableStateOf("") }
+
+        TextField(
+            value = password,
+            onValueChange = { password = it },
+            label = { Text("Enter password") },
+            visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+        )
+
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            val canvasWidth = size.width
+            val canvasHeight = size.height
+
+            drawLine(
+                start = Offset(x = canvasWidth, y = 0f),
+                end = Offset(x = 0f, y = canvasHeight),
+                color = Color.Blue,
+                strokeWidth = 5F
+            )
+        }
 
     }
 }
