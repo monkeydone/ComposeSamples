@@ -15,6 +15,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberImagePainter
+import coil.transform.RoundedCornersTransformation
 
 
 class LayoutDemo {
@@ -23,7 +25,7 @@ class LayoutDemo {
 }
 
 
-data class ArtistData(val name:String,val desc:String)
+data class ArtistData(val name:String,val desc:String,val workUrl:String)
 
 @Composable
 fun ArtistCard(artist: ArtistData) {
@@ -50,7 +52,12 @@ fun ArtistCard(artist: ArtistData) {
                 )
             }
         }
-        Image(painter = painterResource(id = R.drawable.ic_launcher_foreground),contentDescription = "photo holder",modifier = Modifier
+        Image(painter = rememberImagePainter(
+            data = artist.workUrl,
+            builder = {
+                transformations(RoundedCornersTransformation(topLeft = 2.0f,topRight = 2.0f,bottomLeft = 2.0f,bottomRight = 2.0f))
+            }
+        ),contentDescription = "photo holder",modifier = Modifier
             .size(40.dp)
             .clip(CircleShape)
             .padding(all = 5.dp)
@@ -64,5 +71,5 @@ fun ArtistCard(artist: ArtistData) {
 @Preview("demo")
 @Composable
 fun LayoutCompose(){
-    ArtistCard(ArtistData("Alfred Sisley","English Man"))
+    ArtistCard(ArtistData("Alfred Sisley","English Man","https://picsum.photos/300/300"))
 }
