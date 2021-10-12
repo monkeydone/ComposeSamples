@@ -195,10 +195,15 @@ fun MyBasicColumnV2(
 @Preview
 @Composable
 private fun CustomChart() {
-    BoxWithConstraints(modifier = Modifier.size(300.dp).background(Color.Gray)) {
+    BoxWithConstraints(modifier = Modifier.size(100.dp).background(Color.Gray)) {
         val density = LocalDensity.current
         with(density) {
             Layout(content = {  }, modifier = Modifier.drawBehind {
+                for(i in 0..10){
+                    val rectSize = Size(10f,10f*i)
+                    val topLeftOffset = Offset(x=i*20f,y=200f-rectSize.height)
+                    drawRect(Color.Green,topLeftOffset,rectSize)
+                }
                 drawLine(Color.Red,start = Offset(0f,0f),end = Offset(0f,200f),strokeWidth = 6f)
                 drawLine(Color.Blue,start = Offset(0f,200f),end = Offset(200f,200f),strokeWidth = 6f)
             }){ _,constraints ->
@@ -269,14 +274,14 @@ private fun BarChart(
             }) { _, constraints ->
                 with(constraints) {
                     layout(
-                        width = if (hasBoundedWidth) maxWidth else minWidth,
-                        height = if (hasBoundedHeight) maxHeight else minHeight,
+                        width = 100,
+                        height = 100,
                         // Custom AlignmentLines are set here. These are propagated
                         // to direct and indirect parent composables.
-                        alignmentLines = mapOf(
-                            MinChartValue to minYBaseline.roundToInt(),
-                            MaxChartValue to maxYBaseline.roundToInt()
-                        )
+//                        alignmentLines = mapOf(
+//                            MinChartValue to minYBaseline.roundToInt(),
+//                            MaxChartValue to maxYBaseline.roundToInt()
+//                        )
                     ) {}
                 }
             }
@@ -398,8 +403,10 @@ fun LayoutCompose(){
         Divider(modifier = Modifier.height(16.dp))
         CallingComposableV3()
         Divider(modifier = Modifier.height(16.dp))
-        ChartDataPreview()
+        CustomChart()
         Divider(modifier = Modifier.height(16.dp))
+        ChartDataPreview()
+
 
     }
 }
