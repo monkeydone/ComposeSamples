@@ -192,6 +192,24 @@ fun MyBasicColumnV2(
 }
 
 
+@Preview
+@Composable
+private fun CustomChart() {
+    BoxWithConstraints(modifier = Modifier.size(300.dp).background(Color.Gray)) {
+        val density = LocalDensity.current
+        with(density) {
+            Layout(content = {  }, modifier = Modifier.drawBehind {
+                drawLine(Color.Red,start = Offset(0f,0f),end = Offset(0f,200f),strokeWidth = 6f)
+                drawLine(Color.Blue,start = Offset(0f,200f),end = Offset(200f,200f),strokeWidth = 6f)
+            }){ _,constraints ->
+               layout(200,200){}
+            }
+
+
+        }
+    }
+}
+
 val MaxChartValue = HorizontalAlignmentLine(merger = { old, new -> kotlin.math.min(old, new) })
 val MinChartValue = HorizontalAlignmentLine(merger = { old, new -> kotlin.math.max(old, new) })
 
@@ -229,7 +247,7 @@ private fun BarChart(
             }
             Layout(content = {}, modifier = Modifier.drawBehind {
                 dataPoints.forEachIndexed { index, dataPoint ->
-                    val rectSize = Size(60f, dataPoint * yPositionRatio)
+                    val rectSize = Size(30f, dataPoint * yPositionRatio)
                     val topLeftOffset = Offset(
                         x = xPositionRatio * (index + 1) - xOffset,
                         y = (maxValue - dataPoint) * yPositionRatio
