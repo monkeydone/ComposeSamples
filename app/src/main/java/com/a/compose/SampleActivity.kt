@@ -68,12 +68,13 @@ class SampleActivity : ComponentActivity() {
 //            TestAnimation()
 //            ScrollBoxes2()
 //            DragBoxes()
-            TransformableSample()
+//            TransformableSample()
 //            SwipeableSample()
 //            PreviewArtistCard()
 //            ChartDataPreview()
 //            ChartDataPreview()
 //            ScrollBoxes()
+            LayoutCompose()
         }
 
     }
