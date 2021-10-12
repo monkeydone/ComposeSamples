@@ -6,7 +6,11 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.*
+import androidx.compose.animation.core.keyframes
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,7 +27,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.inset
+import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.graphics.drawscope.translate
+import androidx.compose.ui.graphics.drawscope.withTransform
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.consumeAllChanges
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -38,9 +50,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.*
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import coil.compose.rememberImagePainter
@@ -48,17 +58,375 @@ import coil.transform.RoundedCornersTransformation
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
+import androidx.compose.foundation.gestures.detectDragGestures as detectDragGestures1
 
 class SampleActivity : ComponentActivity() {
+    @ExperimentalMaterialApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            PreviewArtistCard()
+//            TestAnimation()
+//            ScrollBoxes2()
+//            DragBoxes()
+            TransformableSample()
+//            SwipeableSample()
+//            PreviewArtistCard()
+//            ChartDataPreview()
 //            ChartDataPreview()
 //            ScrollBoxes()
         }
 
     }
+}
+
+
+@Composable
+fun TransformableSample() {
+    // set up all transformation states
+    var scale by remember { mutableStateOf(1f) }
+    var rotation by remember { mutableStateOf(0f) }
+    var offset by remember { mutableStateOf(Offset.Zero) }
+    val state = rememberTransformableState { zoomChange, offsetChange, rotationChange ->
+        scale *= zoomChange
+        rotation += rotationChange
+        offset += offsetChange
+    }
+    Box(
+        Modifier
+            // apply other transformations like rotation and zoom
+            // on the pizza slice emoji
+            .graphicsLayer(
+                scaleX = scale,
+                scaleY = scale,
+                rotationZ = rotation,
+                translationX = offset.x,
+                translationY = offset.y
+            )
+            // add transformable to listen to multitouch transformation events
+            // after offset
+            .transformable(state = state)
+            .background(Color.Blue)
+            .fillMaxSize()
+    )
+}
+
+@Composable
+fun DragBoxes(){
+//    var offsetX by remember { mutableStateOf(0f) }
+//    Text(
+//        modifier = Modifier
+//            .offset { IntOffset(offsetX.roundToInt(), 0) }
+//            .draggable(
+//                orientation = Orientation.Horizontal,
+//                state = rememberDraggableState { delta ->
+//                    offsetX += delta
+//                }
+//            ),
+//        text = "Drag me!"
+//    )
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        var offsetX by remember { mutableStateOf(0f) }
+        var offsetY by remember { mutableStateOf(0f) }
+
+        Box(
+            Modifier
+                .offset { IntOffset(offsetX.roundToInt(), offsetY.roundToInt()) }
+                .background(Color.Blue)
+                .size(50.dp)
+                .pointerInput(Unit) {
+                    detectDragGestures1 { change, dragAmount ->
+                        change.consumeAllChanges()
+                        offsetX += dragAmount.x
+                        offsetY += dragAmount.y
+                    }
+                }
+        )
+    }
+
+}
+
+
+@ExperimentalMaterialApi
+@Composable
+fun SwipeableSample() {
+    val width = 96.dp
+    val squareSize = 48.dp
+
+    val swipeableState = rememberSwipeableState(0)
+    val sizePx = with(LocalDensity.current) { squareSize.toPx() }
+    val anchors = mapOf(0f to 0, sizePx to 1) // Maps anchor points (in px) to states
+
+    Box(
+        modifier = Modifier
+            .width(width)
+            .swipeable(
+                state = swipeableState,
+                anchors = anchors,
+                thresholds = { _, _ -> FractionalThreshold(0.3f) },
+                orientation = Orientation.Horizontal
+            )
+            .background(Color.LightGray)
+    ) {
+        Box(
+            Modifier
+                .offset { IntOffset(swipeableState.offset.value.roundToInt(), 0) }
+                .size(squareSize)
+                .background(Color.DarkGray)
+        )
+    }
+}
+
+@Preview
+@Composable
+fun ScrollBoxes2() {
+    Column(
+    ) {
+        var offset by remember { mutableStateOf(0f) }
+        Box(
+            Modifier
+                .size(150.dp)
+                .scrollable(
+                    orientation = Orientation.Vertical,
+                    // Scrollable state: describes how to consume
+                    // scrolling delta and update offset
+                    state = rememberScrollableState { delta ->
+                        offset += delta
+                        delta
+                    }
+                )
+                .background(Color.LightGray),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(offset.toString())
+        }
+
+        val gradient = Brush.verticalGradient(0f to Color.Gray, 1000f to Color.White)
+        Box(
+            modifier = Modifier
+                .background(Color.LightGray)
+                .verticalScroll(rememberScrollState())
+                .padding(32.dp)
+        ) {
+            Column {
+                repeat(6) {
+                    Box(
+                        modifier = Modifier
+                            .height(128.dp)
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        Text(
+                            "Scroll here",
+                            modifier = Modifier
+                                .border(12.dp, Color.DarkGray)
+                                .background(brush = gradient)
+                                .padding(24.dp)
+                                .height(150.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+@ExperimentalMaterialApi
+@OptIn(ExperimentalAnimationApi::class)
+@Preview
+@Composable
+fun TestAnimation() {
+    var visible by remember { mutableStateOf(true) }
+//    val density = LocalDensity.current
+//    AnimatedVisibility(
+//        visible = visible,
+//        enter = slideInVertically(
+//            // Slide in from 40 dp from the top.
+//            initialOffsetY = { with(density) { -40.dp.roundToPx() } }
+//        ) + expandVertically(
+//            // Expand from the top.
+//            expandFrom = Alignment.Top
+//        ) + fadeIn(
+//            // Fade in with the initial alpha of 0.3f.
+//            initialAlpha = 0.3f
+//        ),
+//        exit = slideOutVertically() + shrinkVertically() + fadeOut()
+//    ) {
+//        Text("Hello", Modifier.fillMaxWidth().height(200.dp))
+//    }
+
+//    AnimatedVisibility(
+//        visible = visible,
+//        // Fade in/out the background and the foreground.
+//        enter = fadeIn(),
+//        exit = fadeOut()
+//    ) {
+//        Box(
+//            Modifier
+//                .fillMaxSize()
+//                .background(Color.DarkGray)) {
+//            Box(
+//                Modifier
+//                    .align(Alignment.Center)
+//                    .animateEnterExit(
+//                        // Slide in/out the inner box.
+//                        enter = slideInVertically(),
+//                        exit = slideOutVertically()
+//                    )
+//                    .sizeIn(minWidth = 256.dp, minHeight = 64.dp)
+//                    .background(Color.Red)
+//            ) {
+//                Column() {
+//                    Text("Hello",
+//                        Modifier
+//                            .fillMaxWidth()
+//                            .height(200.dp))
+//                    Spacer(modifier = Modifier.fillMaxWidth().height(5.dp).background(Color.Blue))
+//                    Text("Click",
+//                        Modifier
+//                            .fillMaxWidth()
+//                            .height(200.dp)
+//                            .clickable {
+//                                visible = !visible
+//                            })
+//                }
+//
+//            }
+//        }
+//    }
+
+    var count by remember { mutableStateOf(1) }
+
+    AnimatedContent(
+        targetState = count,
+        transitionSpec = {
+            // Compare the incoming number with the previous number.
+            if (targetState > initialState) {
+                // If the target number is larger, it slides up and fades in
+                // while the initial (smaller) number slides up and fades out.
+                slideInVertically({ height -> height }) + fadeIn() with
+                        slideOutVertically({ height -> -height }) + fadeOut()
+            } else {
+                // If the target number is smaller, it slides down and fades in
+                // while the initial number slides down and fades out.
+                slideInVertically({ height -> -height }) + fadeIn() with
+                        slideOutVertically({ height -> height }) + fadeOut()
+            }.using(
+                // Disable clipping since the faded slide-in/out should
+                // be displayed out of bounds.
+                SizeTransform(clip = false)
+            )
+        }
+    ) { targetCount ->
+        Text(text = "$targetCount",modifier = Modifier.clickable {
+            count++
+        })
+    }
+
+    var expanded by remember { mutableStateOf(false) }
+
+    Surface(
+        color = MaterialTheme.colors.primary,
+        onClick = { expanded = !expanded }
+    ) {
+        AnimatedContent(
+            targetState = expanded,
+            transitionSpec = {
+                fadeIn(animationSpec = tween(150, 150)) with
+                        fadeOut(animationSpec = tween(150)) using
+                        SizeTransform { initialSize, targetSize ->
+                            if (targetState) {
+                                keyframes {
+                                    // Expand horizontally first.
+                                    IntSize(targetSize.width, initialSize.height) at 150
+                                    durationMillis = 300
+                                }
+                            } else {
+                                keyframes {
+                                    // Shrink vertically first.
+                                    IntSize(initialSize.width, targetSize.height) at 150
+                                    durationMillis = 300
+                                }
+                            }
+                        }
+            }
+        ) { targetExpanded ->
+//            if (targetExpanded) {
+//                Expanded()
+//            } else {
+//                ContentIcon()
+//            }
+        }
+    }
+}
+
+
+@Preview
+@Composable
+fun ShapeTest(){
+    Column {
+        Canvas(modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Transparent)
+        ) {
+            val canvasWidth = size.width
+            val canvasHeight = size.height
+
+            drawLine(
+                start = Offset(x = canvasWidth, y = 0f),
+                end = Offset(x = 0f, y = canvasHeight),
+                color = Color.Blue,
+                strokeWidth = 5F
+            )
+            drawCircle(
+                color = Color.Blue,
+                center = Offset(x = canvasWidth / 2, y = canvasHeight / 2),
+                radius = size.minDimension / 4
+            )
+
+            val canvasQuadrantSize = size / 2F
+            drawRect(
+                color = Color.Green,
+                size = canvasQuadrantSize
+            )
+
+            inset(50F, 30F) {
+                drawRect(
+                    color = Color.Green,
+                    size = canvasQuadrantSize
+                )
+            }
+
+            val canvasSize = size
+            drawRect(
+                color = Color.Gray,
+                topLeft = Offset(x = canvasWidth / 3F, y = canvasHeight / 3F),
+                size = canvasSize / 3F
+            )
+
+            rotate(degrees = 45F) {
+                drawRect(
+                    color = Color.Gray,
+                    topLeft = Offset(x = canvasWidth / 3F, y = canvasHeight / 3F),
+                    size = canvasSize / 3F
+                )
+            }
+
+            withTransform({
+                translate(left = canvasWidth / 5F)
+                rotate(degrees = 45F)
+            }) {
+                drawRect(
+                    color = Color.Gray,
+                    topLeft = Offset(x = canvasWidth / 3F, y = canvasHeight / 3F),
+                    size = canvasSize / 3F
+                )
+            }
+        }
+
+
+    }
+
 }
 
 @Preview
@@ -294,7 +662,9 @@ fun TwoTexts(
         )
         Divider(
             color = Color.Black,
-            modifier = Modifier.fillMaxHeight().width(1.dp)
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(1.dp)
         )
         Text(
             modifier = Modifier
@@ -511,9 +881,15 @@ fun PaddingExample() {
 
 
 
-        Text("Hi there!", Modifier.firstBaselineToTop(32.dp).background(MaterialTheme.colors.background))
+        Text("Hi there!",
+            Modifier
+                .firstBaselineToTop(32.dp)
+                .background(MaterialTheme.colors.background))
 
-        Text("Hi there!", Modifier.padding(top = 32.dp).background(MaterialTheme.colors.secondary))
+        Text("Hi there!",
+            Modifier
+                .padding(top = 32.dp)
+                .background(MaterialTheme.colors.secondary))
         Text(
             text = "Hello World!",
             color = MaterialTheme.colors.primary,
