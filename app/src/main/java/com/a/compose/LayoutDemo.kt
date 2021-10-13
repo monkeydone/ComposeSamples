@@ -271,6 +271,7 @@ private fun BarChart(
                     end = Offset(maxWidth.toPx(), maxHeight.toPx()),
                     strokeWidth = 6f
                 )
+
             }) { _, constraints ->
                 with(constraints) {
                     layout(
@@ -278,10 +279,10 @@ private fun BarChart(
                         height = 100,
                         // Custom AlignmentLines are set here. These are propagated
                         // to direct and indirect parent composables.
-//                        alignmentLines = mapOf(
-//                            MinChartValue to minYBaseline.roundToInt(),
-//                            MaxChartValue to maxYBaseline.roundToInt()
-//                        )
+                        alignmentLines = mapOf(
+                            MinChartValue to minYBaseline.roundToInt(),
+                            MaxChartValue to maxYBaseline.roundToInt()
+                        )
                     ) {}
                 }
             }
@@ -342,7 +343,11 @@ private fun ChartDataPreview() {
             dataPoints = listOf(4, 24, 15),
             maxText = { Text("Max") },
             minText = { Text("Min") },
-            modifier = Modifier.padding(24.dp)
+            modifier = Modifier.padding(24.dp).drawBehind {
+
+                drawLine(Color.Red,start = Offset(0f,0f),end = Offset(0f,200f),strokeWidth = 5f)
+                drawLine(Color.Blue,start = Offset(0f,0f),end = Offset(200f,0f),strokeWidth = 5f)
+            }
         )
     }
 }
