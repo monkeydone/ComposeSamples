@@ -75,7 +75,8 @@ class SampleActivity : ComponentActivity() {
 //            ChartDataPreview()
 //            ScrollBoxes()
 //            LayoutCompose()
-            TextDemo()
+//            TextDemo()
+            ShapeDemo()
         }
 
     }
