@@ -76,7 +76,8 @@ class SampleActivity : ComponentActivity() {
 //            ScrollBoxes()
 //            LayoutCompose()
 //            TextDemo()
-            ShapeDemo()
+//            ShapeDemo()
+            AnimationDemo()
         }
 
     }
