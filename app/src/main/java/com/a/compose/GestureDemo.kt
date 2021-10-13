@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
 
+@OptIn(ExperimentalFoundationApi::class)
 @ExperimentalMaterialApi
 @Preview
 @Composable
@@ -44,9 +45,35 @@ fun GestureDemo() {
             DragViewDemo()
             Divider(Modifier.height(2.dp))
             SwipeableSampleV2()
+            Divider(Modifier.height(2.dp))
+            ListDemo()
         }
     }
 }
+
+@OptIn(ExperimentalFoundationApi::class)
+@ExperimentalFoundationApi
+@Composable
+fun ListDemo() {
+    LazyColumn(modifier = Modifier.size(200.dp),contentPadding = PaddingValues(horizontal = 16.dp,8.dp),verticalArrangement = Arrangement.spacedBy(4.dp)) {
+
+        item {
+            Text("Header",textAlign = TextAlign.Center,modifier = Modifier.background(Color.Green))
+        }
+        stickyHeader {
+            Text("stickyHeader",textAlign = TextAlign.Start,modifier = Modifier.background(Color.Green))
+        }
+        items(40) {
+            Text("Body $it",textAlign = TextAlign.Center,modifier = Modifier.background(Color.Green))
+        }
+        item{
+            Text("Footer",textAlign = TextAlign.Center,modifier = Modifier.background(Color.Green))
+        }
+    }
+
+}
+
+
 
 @ExperimentalMaterialApi
 @Composable
@@ -246,3 +273,4 @@ private fun ScrollBoxesSmoothV2() {
         }
     }
 }
+
