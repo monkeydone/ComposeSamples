@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -191,11 +192,101 @@ fun MyBasicColumnV2(
     }
 }
 
+@Preview
+@Composable
+fun CoordinateView() {
+    val density = LocalDensity.current
+    BoxWithConstraints(modifier = Modifier
+        .size(200.dp)
+        .padding(10.dp)
+        .background(Color.Green)
+        .drawBehind {
+            drawLine(
+                Color.Red,
+                start = Offset(0f, 0f),
+                end = Offset(0f, 200f * density.density),
+                strokeWidth = 6f
+            )
+            drawLine(
+                Color.Red,
+                start = Offset(0f, 0f),
+                end = Offset(200f * density.density, 0f),
+                strokeWidth = 6f
+            )
+        }) {
+
+    }
+
+}
+
+@Preview
+@Composable
+fun CoordinateViewV2() {
+    val density = LocalDensity.current
+    BoxWithConstraints(modifier = Modifier
+        .size(200.dp)
+        .background(Color.Green)
+        .padding(10.dp)
+        .drawBehind {
+            val height = 200f * density.density
+            val left = 10f
+            drawLine(
+                Color.Red,
+                start = Offset(left, height,),
+                end = Offset(height, height),
+                strokeWidth = 6f
+            )
+            drawLine(
+                Color.Red,
+                start = Offset(left, left),
+                end = Offset(200f * density.density, left),
+                strokeWidth = 6f
+            )
+        }) {
+
+    }
+
+}
+
+@Composable
+fun TwoTextsV2(
+    text1: String,
+    text2: String,
+    max:Boolean = false,
+    modifier: Modifier = Modifier
+) {
+    val max = if(max) IntrinsicSize.Max else IntrinsicSize.Min
+    Row(modifier = modifier.height(max)) {
+        Text(
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 4.dp)
+                .wrapContentWidth(Alignment.Start),
+            text = text1
+        )
+        Divider(
+            color = Color.Black,
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(1.dp)
+        )
+        Text(
+            modifier = Modifier
+                .weight(1f)
+                .padding(end = 4.dp)
+                .wrapContentWidth(Alignment.End),
+            text = text2
+        )
+    }
+}
+
 
 @Preview
 @Composable
 private fun CustomChart() {
-    BoxWithConstraints(modifier = Modifier.size(100.dp).background(Color.Gray)) {
+    BoxWithConstraints(modifier = Modifier
+        .size(100.dp)
+        .background(Color.Gray)) {
         val density = LocalDensity.current
         with(density) {
             Layout(content = {  }, modifier = Modifier.drawBehind {
@@ -335,6 +426,8 @@ private fun BarChartMinMax(
     }
 }
 
+
+
 @Preview
 @Composable
 private fun ChartDataPreview() {
@@ -343,11 +436,23 @@ private fun ChartDataPreview() {
             dataPoints = listOf(4, 24, 15),
             maxText = { Text("Max") },
             minText = { Text("Min") },
-            modifier = Modifier.padding(24.dp).drawBehind {
+            modifier = Modifier
+                .padding(24.dp)
+                .drawBehind {
 
-                drawLine(Color.Red,start = Offset(0f,0f),end = Offset(0f,200f),strokeWidth = 5f)
-                drawLine(Color.Blue,start = Offset(0f,0f),end = Offset(200f,0f),strokeWidth = 5f)
-            }
+                    drawLine(
+                        Color.Red,
+                        start = Offset(0f, 0f),
+                        end = Offset(0f, 200f),
+                        strokeWidth = 5f
+                    )
+                    drawLine(
+                        Color.Blue,
+                        start = Offset(0f, 0f),
+                        end = Offset(200f, 0f),
+                        strokeWidth = 5f
+                    )
+                }
         )
     }
 }
@@ -394,23 +499,38 @@ fun Modifier.firstBaselineToTopV2(
 @Preview("demo")
 @Composable
 fun LayoutCompose(){
-    Column {
-        ArtistCard(ArtistData("Alfred Sisley","English Man","https://picsum.photos/300/300"))
-        Divider(modifier = Modifier.height(16.dp))
-        LikeButton {
-//            oneDialog()
+    LazyColumn {
+        item{
+            Divider(modifier = Modifier.height(16.dp))
+            CoordinateView()
+            Divider(modifier = Modifier.height(16.dp))
+            CoordinateViewV2()
+            Divider(modifier = Modifier.height(16.dp))
+            TwoTextsV2(text1 = "Hi", text2 ="There" )
+            Divider(modifier = Modifier.height(16.dp))
+            TwoTextsV2(text1 = "Hi", text2 ="There" ,max = true)
+            Divider(modifier = Modifier.height(16.dp))
+            TwoTextsV2(text1 = "Hi".repeat(30), text2 ="There" ,max = true)
         }
-        CustomText()
-        Divider(modifier = Modifier.height(16.dp))
-        CallingComposable()
-        Divider(modifier = Modifier.height(16.dp))
-        ArtistCard(ArtistData("Alfred Sisley","English Man","https://picsum.photos/300/300"))
-        Divider(modifier = Modifier.height(16.dp))
-        CallingComposableV3()
-        Divider(modifier = Modifier.height(16.dp))
-        CustomChart()
-        Divider(modifier = Modifier.height(16.dp))
-        ChartDataPreview()
+
+        item{
+            ArtistCard(ArtistData("Alfred Sisley","English Man","https://picsum.photos/300/300"))
+            Divider(modifier = Modifier.height(16.dp))
+            LikeButton {
+//            oneDialog()
+            }
+            CustomText()
+            Divider(modifier = Modifier.height(16.dp))
+            CallingComposable()
+            Divider(modifier = Modifier.height(16.dp))
+            ArtistCard(ArtistData("Alfred Sisley","English Man","https://picsum.photos/300/300"))
+            Divider(modifier = Modifier.height(16.dp))
+            CallingComposableV3()
+            Divider(modifier = Modifier.height(16.dp))
+            CustomChart()
+            Divider(modifier = Modifier.height(16.dp))
+            ChartDataPreview()
+        }
 
 
     }
