@@ -77,7 +77,8 @@ class SampleActivity : ComponentActivity() {
 //            LayoutCompose()
 //            TextDemo()
 //            ShapeDemo()
-            AnimationDemo()
+//            AnimationDemo()
+            GestureDemo()
         }
 
     }

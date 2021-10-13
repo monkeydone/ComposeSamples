@@ -260,7 +260,7 @@ fun CrossfadeDemo() {
 }
 
 @Composable
-fun GestureDemo() {
+fun GestureDemoV2() {
     val offset = remember { Animatable(Offset(0f, 0f), Offset.VectorConverter) }
     Box(
         modifier = Modifier
@@ -497,7 +497,7 @@ fun AnimationDemo() {
         }
         item{
             var extended by remember { mutableStateOf(true)}
-            GestureDemo()
+            GestureDemoV2()
             Divider(Modifier.height(2.dp))
             AnimatingBoxDemo()
             Divider(Modifier.height(2.dp))
