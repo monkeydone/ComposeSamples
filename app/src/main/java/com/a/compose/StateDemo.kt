@@ -17,35 +17,76 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
+import java.util.*
+
+
+data class TodoItem(
+    val task: String,
+    val id: UUID = UUID.randomUUID()
+)
+fun generateRandomTodoItem(): TodoItem {
+    val message = listOf(
+        "Learn compose",
+        "Learn state",
+        "Build dynamic UIs",
+        "Learn Unidirectional Data Flow",
+        "Integrate LiveData",
+        "Integrate ViewModel",
+        "Remember to savedState!",
+        "Build stateless composables",
+        "Use state from stateless composables"
+    ).random()
+    return TodoItem(message)
+}
+
 
 
 class TodoViewModel:ViewModel(){
     var count = 0
     var data = CountData(0,"data")
+    val lists = ArrayList<TodoItem>().apply {
+        repeat(5){
+            add(generateRandomTodoItem())
+        }
+    }
+
+    var stateList = mutableStateListOf<TodoItem>().apply {
+        addAll(lists)
+    }
+
+    fun addItem(item:TodoItem) {
+        stateList.add(item)
+    }
+
 
 }
 
 @Preview
 @Composable
 fun StateDemo(viewModel: TodoViewModel = TodoViewModel()) {
-    LazyColumn()  {
-        item{
-            Text("State Demo",textAlign = TextAlign.Center,modifier = Modifier
-                .fillMaxWidth()
+//    LazyColumn()  {
+//        item{
+//            Text("State Demo",textAlign = TextAlign.Center,modifier = Modifier
+//                .fillMaxWidth()
+//
+//            )
+//        }
+//        item{
+//            Divider(Modifier.height(1.dp))
+//            CountDemo(viewModel = viewModel)
+//            Divider(Modifier.height(1.dp))
+//            CountDemoV2()
+//            Divider(Modifier.height(1.dp))
+//            CountDemoV3(viewModel = viewModel)
+//            Divider(Modifier.height(1.dp))
+//            DataClassDemo()
+//            Divider(Modifier.height(1.dp))
+//            TodoScreen(viewModel.lists)
+//
+//        }
+//    }
 
-            )
-        }
-        item{
-            Divider(Modifier.height(1.dp))
-            CountDemo(viewModel = viewModel)
-            Divider(Modifier.height(1.dp))
-            CountDemoV2()
-            Divider(Modifier.height(1.dp))
-            CountDemoV3(viewModel = viewModel)
-            Divider(Modifier.height(1.dp))
-            DataClassDemo()
-        }
-    }
+    TodoScreen(viewModel = viewModel,viewModel.lists)
 
 }
 
@@ -84,7 +125,7 @@ fun CountDemoV3(viewModel: TodoViewModel) {
             .padding(10.dp)
             .clickable {
                 viewModel.data.count += 1
-                modelSetting(model.copy(count=viewModel.data.count))
+                modelSetting(model.copy(count = viewModel.data.count))
             })
 
 }
@@ -108,6 +149,20 @@ fun DataClassDemo() {
     }
 }
 
+@Composable
+fun TodoScreen(viewModel: TodoViewModel,todoList:ArrayList<TodoItem>) {
+    LazyColumn(contentPadding = PaddingValues(top= 8.dp),modifier = Modifier.background(Color.Blue).clickable {
+        viewModel.addItem(generateRandomTodoItem())
+    }) {
+       for(i in todoList) {
+           item {
+               Text(text = "${i.task}",modifier = Modifier.background(Color.Green))
+           }
+       }
+    }
+
+}
+
 
 @Composable
 fun CountDemoV2() {
@@ -124,6 +179,4 @@ fun CountDemoV2() {
             .clickable { count += 1 }
             .fillMaxWidth()
     )
-
-
 }
