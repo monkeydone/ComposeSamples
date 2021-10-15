@@ -84,6 +84,8 @@ fun StateDemo(viewModel: TodoViewModel = TodoViewModel()) {
         ListTestV2(viewModel = viewModel)
         Divider(Modifier.height(1.dp))
         ListTestV3(viewModel = viewModel)
+        Divider(Modifier.height(1.dp))
+        ListTestV4(viewModel = viewModel,viewModel::addItem)
 
 //            TodoScreen(viewModel = viewModel)
 
@@ -119,6 +121,31 @@ fun ListTestV3(viewModel: TodoViewModel) {
     }
 }
 
+@Composable
+fun ListTestV4(viewModel: TodoViewModel,onAddItem:(TodoItem)->Unit) {
+    var list2 = remember {
+        viewModel.stateList
+    }
+
+    var count by remember {
+        mutableStateOf(0)
+    }
+
+    LazyColumn(
+        contentPadding = PaddingValues(horizontal = 16.dp,8.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+        modifier = Modifier
+            .clickable {
+//                viewModel.addItem(generateRandomTodoItem())
+                onAddItem(generateRandomTodoItem())
+                count = list2.size
+            }
+            .background(Color.Red)) {
+        items(items = list2) { i ->
+            Text("Item ${i.task} ${i.id} $count",modifier= Modifier.clip(CircleShape).background(Color.Green))
+        }
+    }
+}
 
 
 @Composable
