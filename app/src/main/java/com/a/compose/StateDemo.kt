@@ -62,30 +62,29 @@ class TodoViewModel:ViewModel(){
 @Preview
 @Composable
 fun StateDemo(viewModel: TodoViewModel = TodoViewModel()) {
-//    LazyColumn()  {
-//        item{
-//            Text("State Demo",textAlign = TextAlign.Center,modifier = Modifier
-//                .fillMaxWidth()
-//
-//            )
-//        }
-//        item{
-//            Divider(Modifier.height(1.dp))
-//            CountDemo(viewModel = viewModel)
-//            Divider(Modifier.height(1.dp))
-//            CountDemoV2()
-//            Divider(Modifier.height(1.dp))
-//            CountDemoV3(viewModel = viewModel)
-//            Divider(Modifier.height(1.dp))
-//            DataClassDemo()
-//            Divider(Modifier.height(1.dp))
-//            TodoScreen(viewModel.lists)
-//
-//        }
-//    }
+    LazyColumn()  {
+        item{
+            Text("State Demo",textAlign = TextAlign.Center,modifier = Modifier
+                .fillMaxWidth()
 
-    TodoScreen(viewModel = viewModel,viewModel.lists)
-    OfflineDialog {  }
+            )
+        }
+        item{
+            Divider(Modifier.height(1.dp))
+            CountDemo(viewModel = viewModel)
+            Divider(Modifier.height(1.dp))
+            CountDemoV2()
+            Divider(Modifier.height(1.dp))
+            CountDemoV3(viewModel = viewModel)
+            Divider(Modifier.height(1.dp))
+            DataClassDemo()
+            Divider(Modifier.height(1.dp))
+
+        }
+    }
+
+//    TodoScreen(viewModel = viewModel,viewModel.lists)
+//    OfflineDialog {  }
 
 }
 
@@ -128,7 +127,7 @@ fun CountDemo(viewModel: TodoViewModel) {
 @Composable
 fun CountDemoV3(viewModel: TodoViewModel) {
     var (model,modelSetting) = remember {
-        mutableStateOf(viewModel.data)
+        mutableStateOf(CountData(0,"name2"))
     }
 
     Text(text="${model.name} ${model.count}",
@@ -139,7 +138,8 @@ fun CountDemoV3(viewModel: TodoViewModel) {
             .padding(10.dp)
             .clickable {
                 viewModel.data.count += 1
-                modelSetting(model.copy(count = viewModel.data.count))
+                modelSetting(model.copy(name = "${viewModel.data.name} ${viewModel.data.count}",count = viewModel.data.count))
+
             })
 
 }
