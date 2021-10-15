@@ -1,9 +1,11 @@
 package com.a.compose
 
+import android.content.ClipData
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -78,6 +80,7 @@ fun StateDemo(viewModel: TodoViewModel = TodoViewModel()) {
             Divider(Modifier.height(1.dp))
             CountDemoV4(viewModel = viewModel)
             Divider(Modifier.height(1.dp))
+            ListTest()
 //            TodoScreen(viewModel = viewModel)
 
     }
@@ -85,6 +88,42 @@ fun StateDemo(viewModel: TodoViewModel = TodoViewModel()) {
 //    TodoScreen(viewModel = viewModel,viewModel.lists)
 //    OfflineDialog {  }
 
+}
+
+@Composable
+fun ListTest() {
+
+    val l = ArrayList<String>().apply {
+        add("Item 1")
+        add("Item 2")
+    }
+    var list = remember {
+        mutableListOf("").apply {
+            addAll(l)
+        }
+    }
+
+    var list2 = remember {
+        mutableStateListOf("").apply {
+            addAll(l)
+        }
+    }
+
+    var count by remember {
+        mutableStateOf(0)
+    }
+
+    LazyColumn(
+        Modifier
+            .clickable {
+                list2.add("test")
+                count = list2.size
+            }
+            .background(Color.Blue)) {
+        items(items = list2) { i ->
+           Text("Item $i $count")
+       }
+    }
 }
 
 
