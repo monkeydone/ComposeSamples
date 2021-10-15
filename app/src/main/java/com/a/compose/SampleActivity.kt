@@ -61,6 +61,7 @@ import kotlin.math.roundToInt
 import androidx.compose.foundation.gestures.detectDragGestures as detectDragGestures1
 
 class SampleActivity : ComponentActivity() {
+    @OptIn(ExperimentalAnimationApi::class)
     @ExperimentalMaterialApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,7 +80,8 @@ class SampleActivity : ComponentActivity() {
 //            ShapeDemo()
 //            AnimationDemo()
 //            GestureDemo()
-            StateDemo()
+//            StateDemo()
+            ComponentDemo()
         }
 
     }
