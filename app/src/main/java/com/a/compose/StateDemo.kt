@@ -79,6 +79,8 @@ fun StateDemo(viewModel: TodoViewModel = TodoViewModel()) {
             Divider(Modifier.height(1.dp))
             DataClassDemo()
             Divider(Modifier.height(1.dp))
+            CountDemoV4(viewModel = viewModel)
+            Divider(Modifier.height(1.dp))
 
         }
     }
@@ -138,7 +140,37 @@ fun CountDemoV3(viewModel: TodoViewModel) {
             .padding(10.dp)
             .clickable {
                 viewModel.data.count += 1
-                modelSetting(model.copy(name = "${viewModel.data.name} ${viewModel.data.count}",count = viewModel.data.count))
+                modelSetting(
+                    model.copy(
+                        name = "${viewModel.data.name} ${viewModel.data.count}",
+                        count = viewModel.data.count
+                    )
+                )
+
+            })
+
+}
+
+@Composable
+fun CountDemoV4(viewModel: TodoViewModel) {
+    var (model,modelSetting) = remember {
+        mutableStateOf(viewModel.data)
+    }
+
+    Text(text="${model.name} ${model.count}",
+        textAlign = TextAlign.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.Green)
+            .padding(10.dp)
+            .clickable {
+                viewModel.data.count += 1
+                modelSetting(
+                    model.copy(
+                        name = "${viewModel.data.name} ${viewModel.data.count}",
+                        count = viewModel.data.count
+                    )
+                )
 
             })
 
@@ -151,17 +183,18 @@ fun DataClassDemo() {
     val (myThing, myThingSetter) = remember { mutableStateOf(MyThing()) }
 
     Column {
-        Text(text = myThing.name)
+        Text(text = "${myThing.name} ${myThing.age}")
         // button to add "a" to the end of the name
         Button(onClick = { myThingSetter(myThing.copy(name = myThing.name + "a")) }) {
-            Text(text = "Add an 'a'")
+            Text(text = "新增A")
         }
         // button to increment the new "age" field by 1
         Button(onClick = { myThingSetter(myThing.copy(age = myThing.age + 1)) }) {
-            Text(text = "Increment age")
+            Text(text = "新增年龄")
         }
     }
 }
+
 
 @Composable
 fun TodoScreen(viewModel: TodoViewModel,todoList:ArrayList<TodoItem>) {
