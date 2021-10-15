@@ -81,6 +81,7 @@ fun StateDemo(viewModel: TodoViewModel = TodoViewModel()) {
             Divider(Modifier.height(1.dp))
             CountDemoV4(viewModel = viewModel)
             Divider(Modifier.height(1.dp))
+            TodoScreen(viewModel = viewModel)
 
         }
     }
@@ -197,21 +198,18 @@ fun DataClassDemo() {
 
 
 @Composable
-fun TodoScreen(viewModel: TodoViewModel,todoList:ArrayList<TodoItem>) {
-    var list by remember {
-        mutableStateOf(todoList)
+fun TodoScreen(viewModel: TodoViewModel) {
+    val (tasks,tasksHandler) = remember {
+        mutableStateListOf(viewModel.lists)
     }
-    LazyColumn(contentPadding = PaddingValues(top= 8.dp),modifier = Modifier
+    Column(modifier = Modifier
         .background(Color.Blue)
         .clickable {
             viewModel.addItem(generateRandomTodoItem())
             viewModel.lists.add(generateRandomTodoItem())
-            list = viewModel.lists
         }) {
-       for(i in todoList) {
-           item {
-               Text(text = "${i.task}",modifier = Modifier.background(Color.Green))
-           }
+       for(i in tasks) {
+           Text(text = "${i.task}",modifier = Modifier.background(Color.Green))
        }
     }
 
