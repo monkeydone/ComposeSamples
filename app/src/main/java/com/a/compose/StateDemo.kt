@@ -1,6 +1,5 @@
 package com.a.compose
 
-import android.content.ClipData
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -8,11 +7,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -45,10 +41,11 @@ class TodoViewModel:ViewModel(){
     var count = 0
     var data = CountData(0,"data")
     val lists = ArrayList<TodoItem>().apply {
-        repeat(5){
+        repeat(1){
             add(generateRandomTodoItem())
         }
     }
+
 
     var stateList = mutableStateListOf<TodoItem>().apply {
         addAll(lists)
@@ -64,7 +61,7 @@ class TodoViewModel:ViewModel(){
 @Preview
 @Composable
 fun StateDemo(viewModel: TodoViewModel = TodoViewModel()) {
-    Column()  {
+    Column {
         Text("State Demo",textAlign = TextAlign.Center,modifier = Modifier
                 .fillMaxWidth()
 
@@ -80,9 +77,12 @@ fun StateDemo(viewModel: TodoViewModel = TodoViewModel()) {
             Divider(Modifier.height(1.dp))
             CountDemoV4(viewModel = viewModel)
             Divider(Modifier.height(1.dp))
-            ListTest()
+            ListTestV1()
         Divider(Modifier.height(1.dp))
-        ListTest2(viewModel = viewModel)
+        ListTestV2(viewModel = viewModel)
+        Divider(Modifier.height(1.dp))
+        ListTestV3(viewModel = viewModel)
+
 //            TodoScreen(viewModel = viewModel)
 
     }
@@ -93,10 +93,34 @@ fun StateDemo(viewModel: TodoViewModel = TodoViewModel()) {
 }
 
 @Composable
-fun ListTest2(viewModel: TodoViewModel) {
+fun ListTestV3(viewModel: TodoViewModel) {
+    var list2 = remember {
+        viewModel.stateList
+    }
+
+    var count by remember {
+        mutableStateOf(0)
+    }
+
+    LazyColumn(
+        contentPadding = PaddingValues(horizontal = 16.dp,8.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+        modifier = Modifier
+            .clickable {
+                viewModel.addItem(generateRandomTodoItem())
+                count = list2.size
+            }
+            .background(Color.Red)) {
+        items(items = list2) { i ->
+            Text("Item ${i.task} ${i.id} $count",modifier= Modifier.background(Color.Green))
+        }
+    }
+}
 
 
 
+@Composable
+fun ListTestV2(viewModel: TodoViewModel) {
     var list2 = remember {
         mutableStateListOf<TodoItem>().apply {
             addAll(viewModel.lists)
@@ -124,7 +148,7 @@ fun ListTest2(viewModel: TodoViewModel) {
 
 
 @Composable
-fun ListTest() {
+fun ListTestV1() {
 
     val l = ArrayList<String>().apply {
         add("Item 1")
