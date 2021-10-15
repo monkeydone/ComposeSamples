@@ -4,15 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Button
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -87,7 +85,23 @@ fun StateDemo(viewModel: TodoViewModel = TodoViewModel()) {
 //    }
 
     TodoScreen(viewModel = viewModel,viewModel.lists)
+    OfflineDialog {  }
 
+}
+
+
+@Composable
+fun OfflineDialog(onRetry: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = {},
+        title = { Text(text = "title") },
+        text = { Text(text = "message") },
+        confirmButton = {
+            TextButton(onClick = onRetry) {
+                Text("retry")
+            }
+        }
+    )
 }
 
 data class CountData(var count:Int,var name:String)
@@ -151,9 +165,16 @@ fun DataClassDemo() {
 
 @Composable
 fun TodoScreen(viewModel: TodoViewModel,todoList:ArrayList<TodoItem>) {
-    LazyColumn(contentPadding = PaddingValues(top= 8.dp),modifier = Modifier.background(Color.Blue).clickable {
-        viewModel.addItem(generateRandomTodoItem())
-    }) {
+    var list by remember {
+        mutableStateOf(todoList)
+    }
+    LazyColumn(contentPadding = PaddingValues(top= 8.dp),modifier = Modifier
+        .background(Color.Blue)
+        .clickable {
+            viewModel.addItem(generateRandomTodoItem())
+            viewModel.lists.add(generateRandomTodoItem())
+            list = viewModel.lists
+        }) {
        for(i in todoList) {
            item {
                Text(text = "${i.task}",modifier = Modifier.background(Color.Green))
