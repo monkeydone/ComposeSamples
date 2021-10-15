@@ -62,14 +62,11 @@ class TodoViewModel:ViewModel(){
 @Preview
 @Composable
 fun StateDemo(viewModel: TodoViewModel = TodoViewModel()) {
-    LazyColumn()  {
-        item{
-            Text("State Demo",textAlign = TextAlign.Center,modifier = Modifier
+    Column()  {
+        Text("State Demo",textAlign = TextAlign.Center,modifier = Modifier
                 .fillMaxWidth()
 
             )
-        }
-        item{
             Divider(Modifier.height(1.dp))
             CountDemo(viewModel = viewModel)
             Divider(Modifier.height(1.dp))
@@ -81,9 +78,8 @@ fun StateDemo(viewModel: TodoViewModel = TodoViewModel()) {
             Divider(Modifier.height(1.dp))
             CountDemoV4(viewModel = viewModel)
             Divider(Modifier.height(1.dp))
-            TodoScreen(viewModel = viewModel)
+//            TodoScreen(viewModel = viewModel)
 
-        }
     }
 
 //    TodoScreen(viewModel = viewModel,viewModel.lists)
@@ -208,7 +204,7 @@ fun TodoScreen(viewModel: TodoViewModel) {
             viewModel.addItem(generateRandomTodoItem())
             viewModel.lists.add(generateRandomTodoItem())
         }) {
-       for(i in tasks) {
+       for(i in viewModel.lists) {
            Text(text = "${i.task}",modifier = Modifier.background(Color.Green))
        }
     }
