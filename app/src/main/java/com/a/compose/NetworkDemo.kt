@@ -58,6 +58,7 @@ fun NetworkDemo() {
     }
 }
 
+
 private val cacheControl by lazy {
     CacheControl.Builder().maxStale(8, TimeUnit.HOURS).build()
 }
