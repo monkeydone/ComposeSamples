@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -33,6 +34,7 @@ import kotlinx.coroutines.launch
 class SampleListActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             ComposeTheme {
                 val scaffoldState = rememberScaffoldState()
@@ -66,14 +68,20 @@ fun AndroidNavGraph(
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     startDestination: String = MainDestinations.HOME_ROUTE
 ) {
-    val actions = remember(navController) { MainActions(navController) }
     val coroutineScope = rememberCoroutineScope()
     val openDrawer: () -> Unit = { coroutineScope.launch { scaffoldState.drawerState.open() } }
+    val container = AppContainerImpl(LocalContext.current)
 
     NavHost(
         navController = navController,
         startDestination = startDestination
     ) {
+        for(i in container.menu.getMenuList()) {
+            composable(i.routePath) {
+                i.view
+            }
+        }
+
         composable(MainDestinations.HOME_ROUTE) {
             Text(MainDestinations.HOME_ROUTE)
         }
@@ -93,29 +101,21 @@ fun LeftMenu(
     navController: NavController,
     closeDrawer: () -> Unit
 ) {
-
     Column(modifier = Modifier.fillMaxSize()) {
         Spacer(Modifier.height(24.dp))
         Divider(color = MaterialTheme.colors.onSurface.copy(alpha = .2f))
-        DrawerButton(
-            icon = Icons.Filled.Home,
-            label = stringResource(id = R.string.nav_HOME_ROUTE),
-            isSelected = currentRoute == MainDestinations.HOME_ROUTE,
-            action = {
-                navController.navigate(MainDestinations.HOME_ROUTE)
-                closeDrawer()
-            }
-        )
-
-        DrawerButton(
-            icon = Icons.Filled.Edit,
-            label = stringResource(id = R.string.nav_INTERESTS_ROUTE),
-            isSelected = currentRoute == MainDestinations.INTERESTS_ROUTE,
-            action = {
-                navController.navigate(MainDestinations.INTERESTS_ROUTE)
-                closeDrawer()
-            }
-        )
+        val container = AppContainerImpl(LocalContext.current)
+        for(i in container.menu.getMenuList()) {
+            DrawerButton(
+                icon = i.icon,
+                label = i.name,
+                isSelected = currentRoute == i.routePath,
+                action = {
+                    navController.navigate(i.routePath)
+                    closeDrawer()
+                }
+            )
+        }
     }
 }
 
