@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.Composable
@@ -50,7 +51,9 @@ fun HomeScreen() {
     Scaffold(
         scaffoldState = scaffoldState,
         drawerContent = {
-           LeftMenu()
+           LeftMenu( scaffoldState = scaffoldState,
+               navController = navController
+           )
         }
     ) {
         JetnewsNavGraph(
@@ -99,7 +102,7 @@ fun JetnewsNavGraph(
         composable(MainDestinations.INTERESTS_ROUTE) {
             Text(MainDestinations.INTERESTS_ROUTE)
         }
-        composable("${MainDestinations.ARTICLE_ROUTE}/{${MainDestinations.ARTICLE_ID_KEY}") { backStackEntry ->
+        composable("${MainDestinations.ARTICLE_ROUTE}") { backStackEntry ->
             Text(MainDestinations.ARTICLE_ROUTE)
         }
     }
@@ -107,29 +110,44 @@ fun JetnewsNavGraph(
 
 
 @Composable
-fun LeftMenu() {
+fun LeftMenu( scaffoldState: ScaffoldState = rememberScaffoldState(),
+              navController: NavHostController = rememberNavController(),
+              ) {
+    val coroutineScope = rememberCoroutineScope()
+
     Column(modifier = Modifier.fillMaxSize()) {
         Spacer(Modifier.height(24.dp))
         Divider(color = MaterialTheme.colors.onSurface.copy(alpha = .2f))
         DrawerButton(
             icon = Icons.Filled.Home,
-            label = stringResource(id = R.string.edit),
+            label = stringResource(id = R.string.nav_HOME_ROUTE),
             isSelected = false,
             action = {
-//                navigateToHome()
-//                closeDrawer()
+                navController.navigate(MainDestinations.HOME_ROUTE)
+                coroutineScope.launch {  scaffoldState.drawerState.close()}
             }
         )
 
         DrawerButton(
             icon = Icons.Filled.Edit,
-            label = stringResource(id = R.string.app_name),
+            label = stringResource(id = R.string.nav_INTERESTS_ROUTE),
             isSelected = true,
             action = {
-//                navigateToInterests()
-//                closeDrawer()
+                navController.navigate(MainDestinations.INTERESTS_ROUTE)
+                coroutineScope.launch {  scaffoldState.drawerState.close()}
             }
         )
+
+        DrawerButton(
+            icon = Icons.Filled.Add,
+            label = stringResource(id = R.string.nav_ARTICLE_ROUTE),
+            isSelected = true,
+            action = {
+                navController.navigate(MainDestinations.ARTICLE_ROUTE)
+                coroutineScope.launch {  scaffoldState.drawerState.close()}
+            }
+        )
+
 
 
     }

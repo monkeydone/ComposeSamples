@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">compose</string>
+    <string name="nav_HOME_ROUTE">HOME_ROUTE</string>
+    <string name="nav_INTERESTS_ROUTE">INTERESTS_ROUTE</string>
+    <string name="nav_ARTICLE_ROUTE">ARTICLE_ROUTE</string>
     <string name="edit">Edit</string>
     <string name="title_activity_navigation_v1">NavigationV1</string>
     <string name="title_activity_android_nav_graph">AndroidNavGraph</string>
