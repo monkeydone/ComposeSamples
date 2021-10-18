@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -78,19 +79,26 @@ fun AndroidNavGraph(
     ) {
         for(i in container.menu.getMenuList()) {
             composable(i.routePath) {
-                i.view
+                PlaceContent(i.name)
             }
         }
 
-        composable(MainDestinations.HOME_ROUTE) {
-            Text(MainDestinations.HOME_ROUTE)
-        }
+
         composable(MainDestinations.INTERESTS_ROUTE) {
             Text(MainDestinations.INTERESTS_ROUTE)
         }
         composable("${MainDestinations.ARTICLE_ROUTE}") { backStackEntry ->
             Text(MainDestinations.ARTICLE_ROUTE)
         }
+    }
+}
+
+
+@Preview()
+@Composable
+fun PlaceContent(text:String = "Demo") {
+    Box(modifier = Modifier.fillMaxSize().background(Color.Red),contentAlignment = Alignment.Center) {
+        Text(text = text)
     }
 }
 
