@@ -2,4 +2,5 @@
     <string name="app_name">compose</string>
     <string name="edit">Edit</string>
     <string name="title_activity_navigation_v1">NavigationV1</string>
+    <string name="title_activity_android_nav_graph">AndroidNavGraph</string>
 </resources>
