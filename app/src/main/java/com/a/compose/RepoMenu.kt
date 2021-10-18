@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
+import com.a.compose.demo.DbDemo
 
 
 interface PepoMenu {
@@ -59,9 +60,13 @@ class RepoMenuImpl:PepoMenu {
             add(Menu("布局", RoutePath.PATH_LAYOUT, Icons.Filled.Place) {
                 LayoutCompose()
             })
-            add(Menu("ViewModel使用", RoutePath.PATH_VIEW_MODEL, Icons.Filled.Build) {
-                LayoutCompose()
+//            add(Menu("数据库", RoutePath.PATH_DB, Icons.Filled.Build) {
+//                LayoutCompose()
+//            })
+            add(Menu("Room", RoutePath.PATH_DB, Icons.Filled.Build) {
+                DbDemo()
             })
+
         }
     }
 
@@ -80,6 +85,7 @@ object RoutePath {
     const val PATH_DRAW = "draw"
     const val PATH_LAYOUT = "layout"
     const val PATH_VIEW_MODEL = "viewmodel"
+    const val PATH_DB = "db"
 }
 
 object RouteName {

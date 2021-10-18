@@ -32,20 +32,9 @@ data class Category(
 
 @Dao
 abstract class CategoriesDao {
-    @Query(
-        """
-        SELECT categories.* FROM categories
-        INNER JOIN (
-            SELECT category_id, COUNT(podcast_uri) AS podcast_count FROM podcast_category_entries
-            GROUP BY category_id
-        ) ON category_id = categories.id
-        ORDER BY podcast_count DESC
-        LIMIT :limit
-        """
-    )
-    abstract fun categoriesSortedByPodcastCount(
-        limit: Int
-    ): Flow<List<Category>>
+
+    @Query("select * from categories")
+    abstract suspend fun listAllCategory():List<Category>
 
     @Query("SELECT * FROM categories WHERE name = :name")
     abstract suspend fun getCategoryWithName(name: String): Category?

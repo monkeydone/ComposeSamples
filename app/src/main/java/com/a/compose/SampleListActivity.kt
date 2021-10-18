@@ -141,6 +141,48 @@ fun LeftMenu(
     }
 }
 
+
+@Composable
+fun CommonButton(
+    label: String,
+    action: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val colors = MaterialTheme.colors
+
+    val textIconColor =
+        colors.onSurface.copy(alpha = 0.6f)
+    val backgroundColor = colors.primary.copy(alpha = 0.12f)
+
+    val surfaceModifier = modifier
+        .padding(start = 8.dp, top = 8.dp, end = 8.dp)
+        .fillMaxWidth()
+    Surface(
+        modifier = surfaceModifier,
+        color = backgroundColor,
+        shape = MaterialTheme.shapes.small
+    ) {
+        TextButton(
+            onClick = action,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Spacer(Modifier.width(16.dp))
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.body2,
+                    color = textIconColor
+                )
+            }
+        }
+    }
+}
+
+
 @Composable
 private fun DrawerButton(
     icon: ImageVector,
