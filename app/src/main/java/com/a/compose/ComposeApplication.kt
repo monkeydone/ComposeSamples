@@ -32,10 +32,10 @@ object Graph {
         )
     }
 
-    private val mainDispatcher: CoroutineDispatcher
+    val mainDispatcher: CoroutineDispatcher
         get() = Dispatchers.Main
 
-    private val ioDispatcher: CoroutineDispatcher
+    val ioDispatcher: CoroutineDispatcher
         get() = Dispatchers.IO
 
     fun provide(context: Context) {

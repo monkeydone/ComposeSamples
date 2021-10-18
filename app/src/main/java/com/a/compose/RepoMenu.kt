@@ -33,9 +33,7 @@ class RepoMenuImpl:PepoMenu {
                 LayoutCompose()
             })
             add(Menu(RouteName.NAME_NETWORK, RoutePath.PATH_NETWORK, Icons.Filled.Phone) {
-                PlaceView(
-                    RoutePath.PATH_NETWORK
-                )
+               NetworkDemo()
             })
             add(Menu(RouteName.NAME_SIMPLE_VIEW, RoutePath.PATH_TEXT, Icons.Filled.Create) {
                 PlaceView(
