@@ -7,6 +7,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Phone
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,14 +23,19 @@ interface PepoMenu {
 class RepoMenuImpl:PepoMenu {
     override fun getMenuList(): List<Menu> {
         return ArrayList<Menu>().apply {
-            add(Menu(RoutePath.PATH_HOME, RoutePath.PATH_HOME, Icons.Filled.Home) {
+            add(Menu(RouteName.NAME_HOME, RoutePath.PATH_HOME, Icons.Filled.Home) {
                 PlaceView(
                     RoutePath.PATH_HOME
                 )
             })
-            add(Menu(RoutePath.PATH_LIST, RoutePath.PATH_LIST, Icons.Filled.List) {
+            add(Menu(RouteName.NAME_LIST, RoutePath.PATH_LIST, Icons.Filled.List) {
                 PlaceView(
                     RoutePath.PATH_LIST
+                )
+            })
+            add(Menu(RouteName.NAME_NETWORK, RoutePath.PATH_NETWORK, Icons.Filled.Phone) {
+                PlaceView(
+                    RoutePath.PATH_NETWORK
                 )
             })
         }
@@ -42,8 +48,14 @@ data class Menu(val name:String, val routePath:String, val icon: ImageVector,val
 object RoutePath {
     const val PATH_HOME = "home"
     const val PATH_LIST = "list"
+    const val PATH_NETWORK = "network"
 }
 
+object RouteName {
+    const val NAME_HOME = "主页"
+    const val NAME_LIST = "列表"
+    const val NAME_NETWORK = "网络"
+}
 
 @Preview()
 @Composable
