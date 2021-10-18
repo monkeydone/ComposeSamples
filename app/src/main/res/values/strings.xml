@@ -6,4 +6,5 @@
     <string name="edit">Edit</string>
     <string name="title_activity_navigation_v1">NavigationV1</string>
     <string name="title_activity_android_nav_graph">AndroidNavGraph</string>
+    <string name="title_activity_sample_list">SampleListActivity</string>
 </resources>

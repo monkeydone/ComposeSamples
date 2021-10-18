@@ -12,34 +12,34 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Compose">
         <activity
+            android:name=".SampleListActivity"
+            android:exported="true"
+            android:label="@string/title_activity_sample_list"
+            android:theme="@style/Theme.Compose.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".AndroidNavGraph"
             android:exported="true"
             android:label="@string/title_activity_android_nav_graph"
-            android:theme="@style/Theme.Compose.NoActionBar" >
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+            android:theme="@style/Theme.Compose.NoActionBar">
 
         </activity>
         <activity
             android:name=".NavigationV1"
             android:exported="true"
             android:label="@string/title_activity_navigation_v1"
-            android:theme="@style/Theme.Compose.NoActionBar">
-
-        </activity>
+            android:theme="@style/Theme.Compose.NoActionBar"></activity>
         <activity
             android:name=".SampleActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Compose.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"
