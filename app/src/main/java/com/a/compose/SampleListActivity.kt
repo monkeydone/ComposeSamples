@@ -82,8 +82,6 @@ fun AndroidNavGraph(
                 PlaceContent(i.name)
             }
         }
-
-
         composable(MainDestinations.INTERESTS_ROUTE) {
             Text(MainDestinations.INTERESTS_ROUTE)
         }
