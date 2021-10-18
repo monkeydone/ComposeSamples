@@ -29,7 +29,7 @@ class RepoMenuImpl:PepoMenu {
                     RoutePath.PATH_HOME
                 )
             })
-            add(Menu(RouteName.NAME_LIST, RoutePath.PATH_LIST, Icons.Filled.List) {
+            add(Menu("简单布局", RoutePath.PATH_LIST, Icons.Filled.List) {
                 LayoutCompose()
             })
             add(Menu(RouteName.NAME_NETWORK, RoutePath.PATH_NETWORK, Icons.Filled.Phone) {
@@ -55,12 +55,9 @@ class RepoMenuImpl:PepoMenu {
             add(Menu("绘制", RoutePath.PATH_DRAW, Icons.Filled.LocationOn) {
                 ShapeDemo()
             })
-            add(Menu("布局", RoutePath.PATH_LAYOUT, Icons.Filled.Place) {
-                LayoutCompose()
+            add(Menu("viewModel例子", RoutePath.PATH_LAYOUT, Icons.Filled.Place) {
+                ViewModelDemo()
             })
-//            add(Menu("数据库", RoutePath.PATH_DB, Icons.Filled.Build) {
-//                LayoutCompose()
-//            })
             add(Menu("Room", RoutePath.PATH_DB, Icons.Filled.Build) {
                 DbDemo()
             })
