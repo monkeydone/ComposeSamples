@@ -74,13 +74,13 @@ class SampleActivity : ComponentActivity() {
 //            PreviewArtistCard()
 //            ChartDataPreview()
 //            ChartDataPreview()
-//            ScrollBoxes()
+            ScrollBoxes()
 //            LayoutCompose()
 //            TextDemo()
 //            ShapeDemo()
 //            AnimationDemo()
 //            GestureDemo()
-            StateDemo()
+//            StateDemo()
 //            ComponentDemo()
         }
 

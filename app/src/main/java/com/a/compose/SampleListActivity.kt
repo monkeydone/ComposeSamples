@@ -79,7 +79,7 @@ fun AndroidNavGraph(
     ) {
         for(i in container.menu.getMenuList()) {
             composable(i.routePath) {
-                PlaceContent(i.name)
+                i.view()
             }
         }
         composable(RoutePath.PATH_HOME) {
