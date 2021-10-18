@@ -3,6 +3,7 @@ package com.a.compose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,12 +15,15 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.a.compose.ui.theme.ComposeTheme
+import kotlinx.coroutines.delay
 
 class NavigationV1 : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,10 +32,29 @@ class NavigationV1 : ComponentActivity() {
             ComposeTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
+                    LandingScreen() {
+                        
+                    }
                     MainApp()
                 }
             }
         }
+    }
+}
+
+private const val SplashWaitTime: Long = 2000*5
+
+@Composable
+fun LandingScreen(modifier: Modifier = Modifier, onTimeout: () -> Unit) {
+    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        // Adds composition consistency. Use the value when LaunchedEffect is first called
+        val currentOnTimeout by rememberUpdatedState(onTimeout)
+
+        LaunchedEffect(Unit) {
+            delay(SplashWaitTime)
+            currentOnTimeout()
+        }
+        Image(painterResource(id = R.drawable.ic_crane_drawer), contentDescription = null)
     }
 }
 
@@ -49,7 +72,11 @@ fun MainApp() {
             )
         }
     ) { innerPadding ->
-        Box(Modifier.padding(innerPadding).background(Color.Blue).fillMaxSize()) {
+        Box(
+            Modifier
+                .padding(innerPadding)
+                .background(Color.Blue)
+                .fillMaxSize(),contentAlignment = Alignment.Center) {
             currentScreen.content(
                 onScreenChange = { screen ->
                     currentScreen = RallyScreen.valueOf(screen)
@@ -73,9 +100,11 @@ fun RallyTabRow(
         Row(Modifier.selectableGroup()) {
             allScreens.forEach { screen ->
                 val bg = if(currentScreen == screen) Color.Blue else Color.Red
-                Text(text = screen.name,modifier = Modifier.background(bg).clickable {
-                   onTabSelected(screen)
-                })
+                Text(text = screen.name,modifier = Modifier
+                    .background(bg)
+                    .clickable {
+                        onTabSelected(screen)
+                    })
 //                RallyTab(
 //                    text = screen.name,
 //                    icon = screen.icon,
