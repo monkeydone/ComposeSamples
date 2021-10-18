@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -16,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
 
 @Preview
 @Composable
@@ -29,8 +29,13 @@ fun ViewModelDemo() {
     }
 
     var (composeState,stateSet) = remember {
-        viewModel.composeState
+        viewModel.composeObjectState
     }
+
+    var composeList   =  remember {
+        viewModel.composeListState
+    }
+
 
     Column() {
         var text by remember {
@@ -39,22 +44,46 @@ fun ViewModelDemo() {
         Text("ViewModelDemo",textAlign = TextAlign.Center, modifier = Modifier
             .fillMaxWidth()
             .background(Color.Green))
+
         Divider(Modifier.height(2.dp))
-        Text("viewModel点击响应",modifier = Modifier.clickable {
-            count +=1
-        })
+        Text("viewModel点击响应",modifier = Modifier
+            .padding(all = 8.dp)
+            .clickable {
+                count += 1
+            })
         Divider(Modifier.height(2.dp))
         Text("$count")
+
         Divider(Modifier.height(2.dp))
-        Text("viewModel点击响应对象",modifier = Modifier.clickable {
-            stateSet(composeState.copy(count = composeState.count+1))
-        })
+        Text("compose状态同步点击",modifier = Modifier
+            .padding(all = 8.dp)
+            .clickable {
+                stateSet(composeState.copy(count = composeState.count + 1))
+            })
         Divider(Modifier.height(2.dp))
         Text("${composeState.name} ${composeState.count}")
+
         Divider(Modifier.height(2.dp))
-        Text("Flow点击响应",modifier = Modifier.clickable {
-            viewState.count +=1
-        })
+        Text("compose list 点击",modifier = Modifier
+            .padding(all = 8.dp)
+            .clickable {
+                composeList.add(ComposeViewState("List1",count = 0))
+            })
+        Divider(Modifier.height(2.dp))
+        var index = 0
+        for(i in composeList) {
+            index++
+            Text("${index} ${i.name} ${i.count}")
+        }
+
+
+
+        Divider(Modifier.height(2.dp))
+        Text("Flow点击响应",modifier = Modifier
+            .padding(all = 8.dp)
+            .clickable {
+                viewState.count += 1
+            })
         Divider(Modifier.height(2.dp))
         Text(text = "${viewState.name} ${viewState.count}")
 
@@ -74,8 +103,8 @@ class ComposeViewModel:ViewModel() {
     val category = MutableStateFlow(list)
 
     var count = mutableStateOf(0)
-    var composeState = mutableStateOf(ComposeViewState(name="compose状态同步点击"))
-
+    var composeObjectState = mutableStateOf(ComposeViewState(name="compose状态同步点击"))
+    var composeListState = mutableStateListOf<ComposeViewState>()
 
     val state = MutableStateFlow(ComposeViewState(name="Flow点击响应"))
 
