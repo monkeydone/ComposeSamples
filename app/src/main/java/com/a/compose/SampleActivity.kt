@@ -80,8 +80,8 @@ class SampleActivity : ComponentActivity() {
 //            ShapeDemo()
 //            AnimationDemo()
 //            GestureDemo()
-//            StateDemo()
-            ComponentDemo()
+            StateDemo()
+//            ComponentDemo()
         }
 
     }

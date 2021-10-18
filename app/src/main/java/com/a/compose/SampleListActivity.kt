@@ -49,11 +49,13 @@ class SampleListActivity : ComponentActivity() {
 
                 Scaffold(
                     scaffoldState = scaffoldState,
-                    drawerContent = {LeftMenu(
+                    drawerContent = {
+                        LeftMenu(
                         currentRoute = currentRoute,
                         navController = navController,
                         closeDrawer = { coroutineScope.launch { scaffoldState.drawerState.close() } }
-                    )}
+                    )
+                    }
                 ) {
                     AndroidNavGraph(navController = navController,scaffoldState = scaffoldState)
                 }
@@ -69,8 +71,6 @@ fun AndroidNavGraph(
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     startDestination: String = MainDestinations.HOME_ROUTE
 ) {
-    val coroutineScope = rememberCoroutineScope()
-    val openDrawer: () -> Unit = { coroutineScope.launch { scaffoldState.drawerState.open() } }
     val container = AppContainerImpl(LocalContext.current)
 
     NavHost(
@@ -81,6 +81,19 @@ fun AndroidNavGraph(
             composable(i.routePath) {
                 PlaceContent(i.name)
             }
+        }
+        composable(RoutePath.PATH_HOME) {
+            LeftMenu(
+                currentRoute = RoutePath.PATH_HOME,
+                navController = navController,
+                closeDrawer = {  }
+            )
+        }
+        composable(RoutePath.PATH_TEXT) {
+            TextDemo()
+        }
+        composable(RoutePath.PATH_STATE) {
+            StateDemo()
         }
         composable(MainDestinations.INTERESTS_ROUTE) {
             Text(MainDestinations.INTERESTS_ROUTE)
@@ -95,10 +108,13 @@ fun AndroidNavGraph(
 @Preview()
 @Composable
 fun PlaceContent(text:String = "Demo") {
-    Box(modifier = Modifier.fillMaxSize().background(Color.Red),contentAlignment = Alignment.Center) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(Color.Red),contentAlignment = Alignment.Center) {
         Text(text = text)
     }
 }
+
 
 
 @Composable

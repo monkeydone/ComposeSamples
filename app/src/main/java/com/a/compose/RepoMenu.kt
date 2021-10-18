@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Phone
@@ -38,6 +39,16 @@ class RepoMenuImpl:PepoMenu {
                     RoutePath.PATH_NETWORK
                 )
             })
+            add(Menu(RouteName.NAME_SIMPLE_VIEW, RoutePath.PATH_TEXT, Icons.Filled.Create) {
+                PlaceView(
+                    RoutePath.PATH_TEXT
+                )
+            })
+            add(Menu(RouteName.NAME_STATE, RoutePath.PATH_STATE, Icons.Filled.List) {
+                PlaceView(
+                    RoutePath.PATH_STATE
+                )
+            })
         }
     }
 
@@ -48,12 +59,16 @@ data class Menu(val name:String, val routePath:String, val icon: ImageVector,val
 object RoutePath {
     const val PATH_HOME = "home"
     const val PATH_LIST = "list"
+    const val PATH_TEXT = "text"
+    const val PATH_STATE = "state"
     const val PATH_NETWORK = "network"
 }
 
 object RouteName {
     const val NAME_HOME = "主页"
     const val NAME_LIST = "列表"
+    const val NAME_SIMPLE_VIEW = "简单视图"
+    const val NAME_STATE = "状态例子"
     const val NAME_NETWORK = "网络"
 }
 
