@@ -1,5 +1,6 @@
 package com.a.compose
 
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
@@ -10,16 +11,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.text.HtmlCompat
+import com.a.compose.component.SampleAndroidView
 
 class MainActivity2 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val container = findViewById<ComposeView>(R.id.compose_view)
-        container.setContent {
-            Column() {
-                ShapeDemo()
-                val context = """
+        val context = """
                     private fun PlantDescription(description: String) {
                         // Remembers the HTML formatted description. Re-executes on a new description
                         val htmlDescription = remember(description) {
@@ -41,11 +40,33 @@ class MainActivity2 : AppCompatActivity() {
                     }
                 """.trimIndent()
 
+        container.setContent {
+            Column() {
+                ShapeDemo()
                 PlantDescription(context)
-
             }
         }
+        val container2 = findViewById<ComposeView>(R.id.compose_view2)
+        container2.setContent {
+            PlantDescriptionV2(context)
+        }
+
+
     }
+}
+
+
+@Composable
+private fun PlantDescriptionV2(description: String) {
+    AndroidView(
+        factory = { context ->
+            SampleAndroidView(context).apply { }
+        },
+        update = {
+            it.setBackgroundColor(Color.RED)
+//            it.setTitle(description)
+        }
+    )
 }
 
 
