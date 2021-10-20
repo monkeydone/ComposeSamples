@@ -1,6 +1,7 @@
 package com.a.compose
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
@@ -55,13 +56,21 @@ class RepoMenuImpl:PepoMenu {
             add(Menu("绘制", RoutePath.PATH_DRAW, Icons.Filled.LocationOn) {
                 ShapeDemo()
             })
-            add(Menu("viewModel例子", RoutePath.PATH_LAYOUT, Icons.Filled.Place) {
+            add(Menu("viewModel例子", RoutePath.PATH_VIEW_MODEL, Icons.Filled.Place) {
                 ViewModelDemo()
             })
             add(Menu("Room", RoutePath.PATH_DB, Icons.Filled.Build) {
                 DbDemo()
             })
+            add(Menu(RouteName.NAME_MERGE, RoutePath.PATH_MERGE, Icons.Filled.List) {
+                PlaceView(
+                    RoutePath.PATH_MERGE
+                )
+            })
 
+//            add(Menu("混合代码", RoutePath.PATH_MERGE, Icons.Filled.Build) {
+//                DbDemo()
+//            })
         }
     }
 
@@ -81,6 +90,7 @@ object RoutePath {
     const val PATH_LAYOUT = "layout"
     const val PATH_VIEW_MODEL = "viewmodel"
     const val PATH_DB = "db"
+    const val PATH_MERGE = "merge"
 }
 
 object RouteName {
@@ -90,6 +100,7 @@ object RouteName {
     const val NAME_STATE = "状态例子"
     const val NAME_GESTURE = "手势"
     const val NAME_NETWORK = "网络"
+    const val NAME_MERGE = "混合代码"
 }
 
 @Preview()

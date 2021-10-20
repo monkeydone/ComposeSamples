@@ -1,5 +1,6 @@
 package com.a.compose
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -89,18 +90,6 @@ fun AndroidNavGraph(
                 closeDrawer = {  }
             )
         }
-        composable(RoutePath.PATH_TEXT) {
-            TextDemo()
-        }
-        composable(RoutePath.PATH_STATE) {
-            StateDemo()
-        }
-        composable(MainDestinations.INTERESTS_ROUTE) {
-            Text(MainDestinations.INTERESTS_ROUTE)
-        }
-        composable("${MainDestinations.ARTICLE_ROUTE}") { backStackEntry ->
-            Text(MainDestinations.ARTICLE_ROUTE)
-        }
     }
 }
 
@@ -126,15 +115,20 @@ fun LeftMenu(
     Column(modifier = Modifier.fillMaxSize()) {
         Spacer(Modifier.height(24.dp))
         Divider(color = MaterialTheme.colors.onSurface.copy(alpha = .2f))
-        val container = AppContainerImpl(LocalContext.current)
+        val context = LocalContext.current
+        val container = AppContainerImpl(context)
         for(i in container.menu.getMenuList()) {
             DrawerButton(
                 icon = i.icon,
                 label = i.name,
                 isSelected = currentRoute == i.routePath,
                 action = {
-                    navController.navigate(i.routePath)
-                    closeDrawer()
+                    if(i.routePath == RoutePath.PATH_MERGE) {
+                        context.startActivity(Intent(context,MainActivity2::class.java))
+                    }else {
+                        navController.navigate(i.routePath)
+                        closeDrawer()
+                    }
                 }
             )
         }
