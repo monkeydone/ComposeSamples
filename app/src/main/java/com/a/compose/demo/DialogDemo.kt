@@ -54,7 +54,7 @@ fun DialogDemo() {
             }
         }
         if(retryDialogState.value) {
-            OfflineDialog(retryDialogState){
+            OfflineDialog(){
                 retryDialogState.value = false
             }
         }
@@ -63,7 +63,7 @@ fun DialogDemo() {
 }
 
 @Composable
-fun OfflineDialog(state:MutableState<Boolean>,onRetry: () -> Unit) {
+fun OfflineDialog(onRetry: () -> Unit) {
     AlertDialog(
         onDismissRequest = {},
         title = { Text(text = "title") },
