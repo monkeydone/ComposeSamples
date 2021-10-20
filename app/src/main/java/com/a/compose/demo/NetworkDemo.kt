@@ -1,4 +1,4 @@
-package com.a.compose
+package com.a.compose.demo
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,6 +14,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.network.HttpException
+import com.a.compose.Graph
 import com.a.compose.utils.await
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

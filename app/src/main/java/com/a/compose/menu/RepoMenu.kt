@@ -15,6 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import com.a.compose.demo.DbDemo
+import com.a.compose.demo.LayoutCompose
+import com.a.compose.demo.NetworkDemo
 
 
 interface PepoMenu {
@@ -37,14 +39,13 @@ class RepoMenuImpl:PepoMenu {
                NetworkDemo()
             })
             add(Menu(RouteName.NAME_SIMPLE_VIEW, RoutePath.PATH_TEXT, Icons.Filled.Create) {
-                PlaceView(
-                    RoutePath.PATH_TEXT
-                )
+               TextDemo()
             })
             add(Menu(RouteName.NAME_STATE, RoutePath.PATH_STATE, Icons.Filled.List) {
-                PlaceView(
-                    RoutePath.PATH_STATE
-                )
+//                PlaceView(
+//                    RoutePath.PATH_STATE
+//                )
+                StateDemo()
             })
             add(Menu(RouteName.NAME_GESTURE, RoutePath.PATH_GESTURE, Icons.Filled.DateRange) {
                 GestureDemo()

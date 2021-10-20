@@ -1,4 +1,4 @@
-package com.a.compose
+package com.a.compose.demo
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.min
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
+import com.a.compose.R
 import kotlin.math.roundToInt
 
 
