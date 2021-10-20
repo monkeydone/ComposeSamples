@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.core.text.HtmlCompat
 import com.a.compose.component.SampleAndroidView
 
@@ -49,6 +50,8 @@ class MainActivity2 : AppCompatActivity() {
         val container2 = findViewById<ComposeView>(R.id.compose_view2)
         container2.setContent {
             PlantDescriptionV2()
+//            AndroidViewBinding(SampleAndroidView)
+
         }
 
 
