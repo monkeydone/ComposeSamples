@@ -2,6 +2,7 @@ package com.a.compose
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -11,10 +12,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,8 +28,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.a.compose.component.BackPressHandler
+import com.a.compose.component.LocalBackPressedDispatcher
 import com.a.compose.ui.theme.ComposeTheme
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SampleListActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,27 +40,45 @@ class SampleListActivity : ComponentActivity() {
 
         setContent {
             ComposeTheme {
-                val scaffoldState = rememberScaffoldState()
+                CompositionLocalProvider(
+                    LocalBackPressedDispatcher provides this.onBackPressedDispatcher
+                ){
+                    val scaffoldState = rememberScaffoldState()
 
-                val navController = rememberNavController()
-                val coroutineScope = rememberCoroutineScope()
+                    val navController = rememberNavController()
+                    val coroutineScope = rememberCoroutineScope()
 
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentRoute = navBackStackEntry?.destination?.route ?: MainDestinations.HOME_ROUTE
+                    val navBackStackEntry by navController.currentBackStackEntryAsState()
+                    val currentRoute = navBackStackEntry?.destination?.route ?: MainDestinations.HOME_ROUTE
+                    val scope = rememberCoroutineScope()
+                    val context = LocalContext.current
 
-
-                Scaffold(
-                    scaffoldState = scaffoldState,
-                    drawerContent = {
-                        LeftMenu(
-                        currentRoute = currentRoute,
-                        navController = navController,
-                        closeDrawer = { coroutineScope.launch { scaffoldState.drawerState.close() } }
-                    )
+                    BackPressHandler {
+                        scope.launch {
+                            withContext(Graph.mainDispatcher) {
+                                Toast.makeText(context,"back key",Toast.LENGTH_LONG).show()
+                            }
+                        }
                     }
-                ) {
-                    AndroidNavGraph(navController = navController,scaffoldState = scaffoldState)
+                    Scaffold(
+                        scaffoldState = scaffoldState,
+                        drawerContent = {
+                            LeftMenu(
+                                currentRoute = currentRoute,
+                                navController = navController,
+                                closeDrawer = { coroutineScope.launch { scaffoldState.drawerState.close() } }
+                            )
+                        }
+                    ) {
+                        Box{
+                            com.a.compose.component.IconButton("返回"){
+                                navController.popBackStack()
+                            }
+                            AndroidNavGraph(navController = navController,scaffoldState = scaffoldState)
+                        }
+                    }
                 }
+
             }
         }
     }
@@ -127,6 +146,7 @@ fun LeftMenu(
                         context.startActivity(Intent(context,MainActivity2::class.java))
                     }else {
                         navController.navigate(i.routePath)
+//                        navController.popBackStack()
                         closeDrawer()
                     }
                 }
