@@ -48,7 +48,7 @@ class MainActivity2 : AppCompatActivity() {
         }
         val container2 = findViewById<ComposeView>(R.id.compose_view2)
         container2.setContent {
-            PlantDescriptionV2(context)
+            PlantDescriptionV2()
         }
 
 
@@ -57,7 +57,7 @@ class MainActivity2 : AppCompatActivity() {
 
 
 @Composable
-private fun PlantDescriptionV2(description: String) {
+private fun PlantDescriptionV2() {
     AndroidView(
         factory = { context ->
             SampleAndroidView(context).apply { }
