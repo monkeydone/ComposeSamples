@@ -50,7 +50,8 @@ class MainActivity2 : AppCompatActivity() {
         val container2 = findViewById<ComposeView>(R.id.compose_view2)
         container2.setContent {
             PlantDescriptionV2()
-//            AndroidViewBinding(SampleAndroidView)
+//            AndroidViewBinding(SampleAndroidView::inflate)
+//            AndroidViewBinding(MainActivity2::getLayoutInflater)
 
         }
 
