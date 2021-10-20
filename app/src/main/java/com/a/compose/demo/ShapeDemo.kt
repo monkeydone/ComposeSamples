@@ -21,23 +21,24 @@ import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.a.compose.component.SampleList
 import kotlinx.coroutines.CoroutineStart
 
 
 @Preview
 @Composable
 fun ShapeDemo() {
-    LazyColumn {
-        item {
-            Text("ShapeDemo")
-        }
-        item{
-            Divider(Modifier.height(1.dp))
-            CanvasDemoV1()
-            Divider(Modifier.height(1.dp))
-            ArcTextExample()
+    SampleList(title = "ShapeDemo") {
+        LazyColumn {
+            item{
+                Divider(Modifier.height(1.dp))
+                CanvasDemoV1()
+                Divider(Modifier.height(1.dp))
+                ArcTextExample()
+            }
         }
     }
+
 }
 
 @Composable

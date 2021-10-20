@@ -18,6 +18,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import com.a.compose.component.SampleItem
+import com.a.compose.component.SampleList
 
 @Composable
 fun BaselineShiftSample() {
@@ -191,65 +193,69 @@ fun AnnotatedStringAddStringAnnotationSample() {
 @Preview
 @Composable
 fun TextDemo() {
-    LazyColumn {
-        item {
-            Text("TextDemo",
-            )
-            Divider(Modifier.height(2.dp))
-            AnnotatedStringConstructorSample()
-            Divider(Modifier.height(2.dp))
-            AnnotatedStringBuilderSample()
-            Divider(Modifier.height(2.dp))
-            AnnotatedStringBuilderPushSample()
-            Divider(Modifier.height(2.dp))
-            AnnotatedStringBuilderPushParagraphStyleSample()
-            Divider(Modifier.height(2.dp))
-            AnnotatedStringBuilderPushStringAnnotationSample()
-            Divider(Modifier.height(2.dp))
-            AnnotatedStringBuilderWithStyleSample()
-            Divider(Modifier.height(2.dp))
-            AnnotatedStringBuilderLambdaSample()
-            Divider(Modifier.height(2.dp))
-            AnnotatedStringAddStringAnnotationSample()
-            Divider(Modifier.height(2.dp))
-            BaselineShiftSample()
-            Divider(Modifier.height(2.dp))
-            BaselineShiftAnnotatedStringSample()
-            Divider(Modifier.height(2.dp))
-            FontFamilySansSerifSample()
-            Divider(Modifier.height(2.dp))
-            FontFamilySerifSample()
-            Divider(Modifier.height(2.dp))
+    SampleList(title = "Text Demo") {
+        LazyColumn {
+            item {
+
+                SampleItem("AnnotatedStringConstructorSample") {
+                    AnnotatedStringConstructorSample()
+                }
+                SampleItem("AnnotatedStringBuilderSample") {
+                    AnnotatedStringBuilderSample()
+                }
+                Divider(Modifier.height(2.dp))
+                AnnotatedStringBuilderPushSample()
+                Divider(Modifier.height(2.dp))
+                AnnotatedStringBuilderPushParagraphStyleSample()
+                Divider(Modifier.height(2.dp))
+                AnnotatedStringBuilderPushStringAnnotationSample()
+                Divider(Modifier.height(2.dp))
+                AnnotatedStringBuilderWithStyleSample()
+                Divider(Modifier.height(2.dp))
+                AnnotatedStringBuilderLambdaSample()
+                Divider(Modifier.height(2.dp))
+                AnnotatedStringAddStringAnnotationSample()
+                Divider(Modifier.height(2.dp))
+                BaselineShiftSample()
+                Divider(Modifier.height(2.dp))
+                BaselineShiftAnnotatedStringSample()
+                Divider(Modifier.height(2.dp))
+                FontFamilySansSerifSample()
+                Divider(Modifier.height(2.dp))
+                FontFamilySerifSample()
+                Divider(Modifier.height(2.dp))
 //            FontFamilySynthesisSample()
 
-        }
-        item {
+            }
+            item {
 
-            Divider(Modifier.height(2.dp))
-            TextStyleSample()
-            Divider(Modifier.height(2.dp))
-            TextOverflowClipSample()
-            Divider(Modifier.height(2.dp))
-            TextOverflowEllipsisSample()
-            Divider(Modifier.height(2.dp))
-            TextOverflowVisibleFixedSizeSample()
-            Divider(Modifier.height(2.dp))
-            TextOverflowVisibleMinHeightSample()
-            Divider(Modifier.height(2.dp))
-            TextDecorationLineThroughSample()
-            Divider(Modifier.height(2.dp))
-            TextDecorationUnderlineSample()
-            Divider(Modifier.height(2.dp))
-            TextDecorationCombinedSample()
-            Divider(Modifier.height(2.dp))
-            SpanStyleSample()
-            Divider(Modifier.height(2.dp))
-            ParagraphStyleSample()
-            Divider(Modifier.height(2.dp))
-            ParagraphStyleAnnotatedStringsSample()
-            Divider(Modifier.height(2.dp))
+                Divider(Modifier.height(2.dp))
+                TextStyleSample()
+                Divider(Modifier.height(2.dp))
+                TextOverflowClipSample()
+                Divider(Modifier.height(2.dp))
+                TextOverflowEllipsisSample()
+                Divider(Modifier.height(2.dp))
+                TextOverflowVisibleFixedSizeSample()
+                Divider(Modifier.height(2.dp))
+                TextOverflowVisibleMinHeightSample()
+                Divider(Modifier.height(2.dp))
+                TextDecorationLineThroughSample()
+                Divider(Modifier.height(2.dp))
+                TextDecorationUnderlineSample()
+                Divider(Modifier.height(2.dp))
+                TextDecorationCombinedSample()
+                Divider(Modifier.height(2.dp))
+                SpanStyleSample()
+                Divider(Modifier.height(2.dp))
+                ParagraphStyleSample()
+                Divider(Modifier.height(2.dp))
+                ParagraphStyleAnnotatedStringsSample()
+                Divider(Modifier.height(2.dp))
+            }
         }
     }
+
 }
 @Composable
 fun FontFamilySansSerifSample() {
@@ -418,7 +424,9 @@ fun TextStyleSample() {
 fun TextOverflowClipSample() {
     Text(
         text = "Hello ".repeat(2),
-        modifier = Modifier.size(100.dp, 70.dp).background(Color.Cyan),
+        modifier = Modifier
+            .size(100.dp, 70.dp)
+            .background(Color.Cyan),
         fontSize = 35.sp,
         overflow = TextOverflow.Clip
     )
@@ -428,7 +436,9 @@ fun TextOverflowClipSample() {
 fun TextOverflowEllipsisSample() {
     Text(
         text = "Hello ".repeat(2),
-        modifier = Modifier.width(100.dp).background(Color.Cyan),
+        modifier = Modifier
+            .width(100.dp)
+            .background(Color.Cyan),
         fontSize = 35.sp,
         overflow = TextOverflow.Ellipsis,
         maxLines = 1
@@ -441,7 +451,8 @@ fun TextOverflowVisibleFixedSizeSample() {
     Box(modifier = Modifier.size(100.dp, 250.dp)) {
         Text(
             text = "Hello World".repeat(4),
-            modifier = Modifier.size(100.dp, 150.dp)
+            modifier = Modifier
+                .size(100.dp, 150.dp)
                 .background(background.value)
                 .clickable {
                     background.value = if (background.value == Color.Cyan) {
@@ -463,7 +474,9 @@ fun TextOverflowVisibleMinHeightSample() {
     Box(modifier = Modifier.size(100.dp, 100.dp)) {
         Text(
             text = "Hello".repeat(count.value),
-            modifier = Modifier.width(100.dp).heightIn(min = 70.dp)
+            modifier = Modifier
+                .width(100.dp)
+                .heightIn(min = 70.dp)
                 .background(background.value)
                 .clickable {
                     background.value =

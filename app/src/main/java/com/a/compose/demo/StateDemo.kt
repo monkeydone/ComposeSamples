@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
+import com.a.compose.component.SampleList
 import java.util.*
 
 
@@ -70,37 +71,25 @@ class TodoViewModel:ViewModel(){
 @Preview
 @Composable
 fun StateDemo(viewModel: TodoViewModel = TodoViewModel()) {
-    Column {
-        Text("State Demo",textAlign = TextAlign.Center,modifier = Modifier
-                .fillMaxWidth()
-
-            )
-            Divider(Modifier.height(1.dp))
-            CountDemo(viewModel = viewModel)
-            Divider(Modifier.height(1.dp))
-            CountDemoV2()
-            Divider(Modifier.height(1.dp))
-            CountDemoV3(viewModel = viewModel)
-            Divider(Modifier.height(1.dp))
-            DataClassDemo()
-            Divider(Modifier.height(1.dp))
-            CountDemoV4(viewModel = viewModel)
-            Divider(Modifier.height(1.dp))
-            ListTestV1()
+    SampleList(title = "State Demo") {
+        CountDemo(viewModel = viewModel)
+        Divider(Modifier.height(1.dp))
+        CountDemoV2()
+        Divider(Modifier.height(1.dp))
+        CountDemoV3(viewModel = viewModel)
+        Divider(Modifier.height(1.dp))
+        DataClassDemo()
+        Divider(Modifier.height(1.dp))
+        CountDemoV4(viewModel = viewModel)
+        Divider(Modifier.height(1.dp))
+        ListTestV1()
         Divider(Modifier.height(1.dp))
         ListTestV2(viewModel = viewModel)
         Divider(Modifier.height(1.dp))
         ListTestV3(viewModel = viewModel)
         Divider(Modifier.height(1.dp))
         ListTestV4(viewModel = viewModel,viewModel::addItem)
-
-//            TodoScreen(viewModel = viewModel)
-
     }
-
-//    TodoScreen(viewModel = viewModel,viewModel.lists)
-//    OfflineDialog {  }
-
 }
 
 @Composable
@@ -123,7 +112,9 @@ fun ListTestV3(viewModel: TodoViewModel) {
             }
             .background(Color.Red)) {
         items(items = list2) { i ->
-            Text("Item ${i.task} ${i.id} $count",modifier= Modifier.clip(CircleShape).background(Color.Green))
+            Text("Item ${i.task} ${i.id} $count",modifier= Modifier
+                .clip(CircleShape)
+                .background(Color.Green))
         }
     }
 }
@@ -149,7 +140,9 @@ fun ListTestV4(viewModel: TodoViewModel,onAddItem:(TodoItem)->Unit) {
             }
             .background(Color.Red)) {
         items(items = list2) { i ->
-            Text("Item ${i.task} ${i.id} $count",modifier= Modifier.clip(CircleShape).background(Color.Green))
+            Text("Item ${i.task} ${i.id} $count",modifier= Modifier
+                .clip(CircleShape)
+                .background(Color.Green))
         }
     }
 }
