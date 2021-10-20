@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @Preview
 @Composable
@@ -25,7 +26,7 @@ fun ViewModelDemo() {
     val viewModel = viewModel(ComposeViewModel::class.java)
 
     val flowCount by viewModel.flowCount.collectAsState()
-    val flowObjectState by viewModel.flowState.collectAsState()
+    val flowObjectState by viewModel._flowState.collectAsState()
 
     var count by remember {
         viewModel.composeCount
@@ -82,7 +83,7 @@ fun ViewModelDemo() {
         Text("Flow点击响应",modifier = Modifier
             .padding(all = 8.dp)
             .clickable {
-                viewModel.flowCount.value +=1
+                viewModel.flowCount.value += 1
             })
         Divider(Modifier.height(2.dp))
         Text(text = "Flow点击响应 ${flowCount}")
@@ -92,9 +93,8 @@ fun ViewModelDemo() {
         Text("Flow对象同步点击",modifier = Modifier
             .padding(all = 8.dp)
             .clickable {
-                val f = viewModel.flowState.value
-                f.count+=1
-               viewModel.flowState.value = f
+//                viewModel._flowState.value = ComposeViewState("点击响应",count = viewModel._flowState.value.count+1)
+                viewModel._flowState.value = viewModel._flowState.value.copy(name="另外一种同步方式",count = viewModel._flowState.value.count+1)
             })
         Divider(Modifier.height(2.dp))
         Text("${flowObjectState.name} ${flowObjectState.count}")
@@ -113,12 +113,16 @@ class ComposeViewModel:ViewModel() {
     var composeListState = mutableStateListOf<ComposeViewState>()
 
 
-    var flowCount = MutableStateFlow(0)
-    val flowState = MutableStateFlow(ComposeViewState(name="Flow点击响应"))
 
-    val selected = MutableStateFlow("")
+    var flowCount = MutableStateFlow(0)
+    val _flowState = MutableStateFlow(ComposeViewState(name="Flow点击响应"))
+    val flowState :StateFlow<ComposeViewState>
+         get() = _flowState
+    fun updateFlowCount() {
+        _flowState.value = ComposeViewState("Flow对象点击响应",count = _flowState.value.count+1)
+    }
+
     val list = ArrayList<String>().apply {
         add("list1")
     }
-    val category = MutableStateFlow(list)
 }
