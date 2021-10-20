@@ -8,11 +8,13 @@ import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.a.compose.component.IconButton
@@ -40,6 +42,7 @@ fun ViewModelDemo() {
 
                     ComposeFlowStateDemo(viewModel = viewModel)
 
+                    ComposeLiveDataDemo(viewModel = viewModel)
 //
                 }
             }
@@ -49,6 +52,63 @@ fun ViewModelDemo() {
     }
 
 
+}
+
+@Composable
+fun ComposeLiveDataDemo(viewModel: ComposeViewModel) {
+    val liveCount by viewModel.liveCount.observeAsState()
+    val liveObjectState by viewModel.liveState.observeAsState()
+    val liveListState by viewModel.liveListState.observeAsState()
+
+
+
+    Column {
+        SampleItem("Compose中的live的例子",style= MaterialTheme.typography.h5) {
+        }
+
+        SampleItem("基础类型") {
+            IconButton("点我") {
+               viewModel.updateLiveCount()
+            }
+            Text("live点击响应 ${liveCount}",modifier = Modifier
+                .padding(all = 8.dp))
+        }
+
+        SampleItem("对象类型") {
+            Row(horizontalArrangement = Arrangement.SpaceBetween,modifier = Modifier
+                .fillMaxWidth()
+                .padding(2.dp)){
+                IconButton("同步方式1") {
+                    viewModel.updateLiveObject()
+                }
+                IconButton("同步方式2") {
+                    val count = viewModel.liveState.value?.count?:0
+                    viewModel.liveState.value = ComposeViewState("点击响应",count = count+1)
+                }
+
+            }
+
+            Text("${liveObjectState?.name} ${liveObjectState?.count}",modifier = Modifier
+                .padding(all = 8.dp))
+        }
+
+
+
+
+        SampleItem("列表类型") {
+            liveListState?.let {
+                for(j in it.toList().indices) {
+                    val i = it[j]
+                    Text("${j} ${i.name} ${i.count}",modifier = Modifier
+                        .padding(all = 8.dp))
+                }
+            }
+            IconButton("点我") {
+                viewModel.updateLiveList(ComposeViewState("列表Item"))
+            }
+        }
+
+    }
 }
 
 @Composable
@@ -74,7 +134,9 @@ fun ComposeFlowStateDemo(viewModel: ComposeViewModel) {
         }
 
         SampleItem("对象类型") {
-            Row(horizontalArrangement = Arrangement.SpaceBetween,modifier = Modifier.fillMaxWidth().padding(2.dp)){
+            Row(horizontalArrangement = Arrangement.SpaceBetween,modifier = Modifier
+                .fillMaxWidth()
+                .padding(2.dp)){
                 IconButton("同步方式1") {
                     viewModel._flowState.value = viewModel._flowState.value.copy(
                         name = "另外一种同步方式",
@@ -182,8 +244,6 @@ class ComposeViewModel:ViewModel() {
         _flowState.value =  ComposeViewState("点击响应",count = flowState.value.count+1)
     }
     val flowListState = MutableStateFlow(ArrayList<ComposeViewState>())
-
-
     fun updateFlowList(data:ComposeViewState) {
         val list = ArrayList<ComposeViewState>()
         list.addAll(flowListState.value)
@@ -191,7 +251,34 @@ class ComposeViewModel:ViewModel() {
         flowListState.value = list
     }
 
-    val list = ArrayList<String>().apply {
-        add("list1")
+    var liveCount = MutableLiveData<Int>(0)
+    val liveState = MutableLiveData<ComposeViewState>(ComposeViewState("LiveData",0))
+    val liveListState = MutableLiveData<ArrayList<ComposeViewState>>()
+
+    fun updateLiveCount() {
+        val count = liveCount.value?:0
+        liveCount.value = count+1
     }
+
+    fun updateLiveObject() {
+        val count = liveState.value?.count?:0
+        val l = liveState.value?.copy(
+            name = "另外一种同步方式",
+            count = count + 1
+        )
+
+        liveState.value = l
+    }
+
+    fun updateLiveList(data:ComposeViewState) {
+        val list = ArrayList<ComposeViewState>()
+        liveListState.value?.let {
+            list.addAll(it)
+        }
+        list.add(data)
+        liveListState.value = list
+    }
+
+
+
 }
