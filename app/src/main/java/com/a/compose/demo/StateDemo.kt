@@ -214,19 +214,7 @@ fun ListTestV1() {
 }
 
 
-@Composable
-fun OfflineDialog(onRetry: () -> Unit) {
-    AlertDialog(
-        onDismissRequest = {},
-        title = { Text(text = "title") },
-        text = { Text(text = "message") },
-        confirmButton = {
-            TextButton(onClick = onRetry) {
-                Text("retry")
-            }
-        }
-    )
-}
+
 
 data class CountData(var count:Int,var name:String)
 

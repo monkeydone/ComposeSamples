@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import com.a.compose.demo.DbDemo
+import com.a.compose.demo.DialogDemo
 import com.a.compose.demo.LayoutCompose
 import com.a.compose.demo.NetworkDemo
 
@@ -68,6 +69,9 @@ class RepoMenuImpl:PepoMenu {
                     RoutePath.PATH_MERGE
                 )
             })
+            add(Menu(RouteName.NAME_DIALOG, RoutePath.PATH_DIALOG, Icons.Filled.List) {
+                DialogDemo()
+            })
 
 //            add(Menu("混合代码", RoutePath.PATH_MERGE, Icons.Filled.Build) {
 //                DbDemo()
@@ -92,6 +96,7 @@ object RoutePath {
     const val PATH_VIEW_MODEL = "viewmodel"
     const val PATH_DB = "db"
     const val PATH_MERGE = "merge"
+    const val PATH_DIALOG = "dialog"
 }
 
 object RouteName {
@@ -102,6 +107,7 @@ object RouteName {
     const val NAME_GESTURE = "手势"
     const val NAME_NETWORK = "网络"
     const val NAME_MERGE = "混合代码"
+    const val NAME_DIALOG = "对话框"
 }
 
 @Preview()

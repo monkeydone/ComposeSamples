@@ -105,6 +105,12 @@ fun RallyTabRow(
                     .clickable {
                         onTabSelected(screen)
                     })
+//                RallyTab(
+//                    text = screen.name,
+//                    icon = screen.icon,
+//                    onSelected = { onTabSelected(screen) },
+//                    selected = currentScreen == screen
+//                )
             }
         }
     }
