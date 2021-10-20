@@ -27,6 +27,7 @@ fun ViewModelDemo() {
 
     val flowCount by viewModel.flowCount.collectAsState()
     val flowObjectState by viewModel._flowState.collectAsState()
+    val flowListState by viewModel.flowListState.collectAsState()
 
     var count by remember {
         viewModel.composeCount
@@ -36,13 +37,18 @@ fun ViewModelDemo() {
         viewModel.composeObjectState
     }
 
-    var composeList   =  remember {
+    var composeList = remember {
         viewModel.composeListState
     }
 
 
     Column() {
         Text("ViewModelDemo",textAlign = TextAlign.Center, modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.Green))
+
+        Divider(Modifier.height(8.dp))
+        Text("Compose同步方式",textAlign = TextAlign.Center, modifier = Modifier
             .fillMaxWidth()
             .background(Color.Green))
 
@@ -68,7 +74,7 @@ fun ViewModelDemo() {
         Text("compose list 点击",modifier = Modifier
             .padding(all = 8.dp)
             .clickable {
-                composeList.add(ComposeViewState("List1", count = 0))
+                composeList.add(ComposeViewState("Compose List1", count = 0))
             })
         Divider(Modifier.height(2.dp))
         var index = 0
@@ -76,6 +82,10 @@ fun ViewModelDemo() {
             index++
             Text("${index} ${i.name} ${i.count}")
         }
+        Divider(Modifier.height(8.dp))
+        Text("Flow同步方式",textAlign = TextAlign.Center, modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.Green))
 
 
 
@@ -94,11 +104,29 @@ fun ViewModelDemo() {
             .padding(all = 8.dp)
             .clickable {
 //                viewModel._flowState.value = ComposeViewState("点击响应",count = viewModel._flowState.value.count+1)
-                viewModel._flowState.value = viewModel._flowState.value.copy(name="另外一种同步方式",count = viewModel._flowState.value.count+1)
+                viewModel._flowState.value = viewModel._flowState.value.copy(
+                    name = "另外一种同步方式",
+                    count = viewModel._flowState.value.count + 1
+                )
             })
         Divider(Modifier.height(2.dp))
         Text("${flowObjectState.name} ${flowObjectState.count}")
 
+        Divider(Modifier.height(2.dp))
+        Text("Flow List 点击",modifier = Modifier
+            .padding(all = 8.dp)
+            .clickable {
+                flowListState.add(ComposeViewState("Flow List1", count = 0))
+                val list = flowListState.toList()
+//                viewModel.flowListState.value.add(ComposeViewState("Flow List1", count = 0))
+                viewModel.flowListState.value = ArrayList(list)
+            })
+        Divider(Modifier.height(2.dp))
+        var indexFlow = 0
+        for(i in flowListState) {
+            indexFlow++
+            Text("${indexFlow} ${i.name} ${i.count}")
+        }
     }
 }
 
@@ -121,6 +149,7 @@ class ComposeViewModel:ViewModel() {
     fun updateFlowCount() {
         _flowState.value = ComposeViewState("Flow对象点击响应",count = _flowState.value.count+1)
     }
+    val flowListState = MutableStateFlow(ArrayList<ComposeViewState>())
 
     val list = ArrayList<String>().apply {
         add("list1")
