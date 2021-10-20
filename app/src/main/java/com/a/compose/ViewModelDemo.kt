@@ -23,9 +23,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 fun ViewModelDemo() {
     val coroutineScope = rememberCoroutineScope()
     val viewModel = viewModel(ComposeViewModel::class.java)
-    val viewState by viewModel.state.collectAsState()
+
+    val flowCount by viewModel.flowCount.collectAsState()
+    val flowObjectState by viewModel.flowState.collectAsState()
+
     var count by remember {
-        viewModel.count
+        viewModel.composeCount
     }
 
     var (composeState,stateSet) = remember {
@@ -38,9 +41,6 @@ fun ViewModelDemo() {
 
 
     Column() {
-        var text by remember {
-            mutableStateOf("")
-        }
         Text("ViewModelDemo",textAlign = TextAlign.Center, modifier = Modifier
             .fillMaxWidth()
             .background(Color.Green))
@@ -67,7 +67,7 @@ fun ViewModelDemo() {
         Text("compose list 点击",modifier = Modifier
             .padding(all = 8.dp)
             .clickable {
-                composeList.add(ComposeViewState("List1",count = 0))
+                composeList.add(ComposeViewState("List1", count = 0))
             })
         Divider(Modifier.height(2.dp))
         var index = 0
@@ -82,12 +82,22 @@ fun ViewModelDemo() {
         Text("Flow点击响应",modifier = Modifier
             .padding(all = 8.dp)
             .clickable {
-                viewState.count += 1
+                viewModel.flowCount.value +=1
             })
         Divider(Modifier.height(2.dp))
-        Text(text = "${viewState.name} ${viewState.count}")
+        Text(text = "Flow点击响应 ${flowCount}")
 
 
+        Divider(Modifier.height(2.dp))
+        Text("Flow对象同步点击",modifier = Modifier
+            .padding(all = 8.dp)
+            .clickable {
+                val f = viewModel.flowState.value
+                f.count+=1
+               viewModel.flowState.value = f
+            })
+        Divider(Modifier.height(2.dp))
+        Text("${flowObjectState.name} ${flowObjectState.count}")
 
     }
 }
@@ -96,17 +106,19 @@ fun ViewModelDemo() {
 data class ComposeViewState(val name:String="",var count:Int = 0)
 
 class ComposeViewModel:ViewModel() {
+
+
+    var composeCount = mutableStateOf(0)
+    var composeObjectState = mutableStateOf(ComposeViewState(name="compose状态同步点击"))
+    var composeListState = mutableStateListOf<ComposeViewState>()
+
+
+    var flowCount = MutableStateFlow(0)
+    val flowState = MutableStateFlow(ComposeViewState(name="Flow点击响应"))
+
     val selected = MutableStateFlow("")
     val list = ArrayList<String>().apply {
         add("list1")
     }
     val category = MutableStateFlow(list)
-
-    var count = mutableStateOf(0)
-    var composeObjectState = mutableStateOf(ComposeViewState(name="compose状态同步点击"))
-    var composeListState = mutableStateListOf<ComposeViewState>()
-
-    val state = MutableStateFlow(ComposeViewState(name="Flow点击响应"))
-
-
 }
