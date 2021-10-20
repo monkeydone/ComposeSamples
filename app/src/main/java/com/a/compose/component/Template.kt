@@ -30,6 +30,7 @@ fun IconButton(text:String="",imageVector: ImageVector = Icons.Filled.Favorite,o
             end = 20.dp,
             bottom = 12.dp
         )
+
     ) {
         // Inner content including an icon and a text label
         Icon(
@@ -46,7 +47,8 @@ fun IconButton(text:String="",imageVector: ImageVector = Icons.Filled.Favorite,o
 fun SampleList(title:String,content:@Composable ()->Unit) {
     Column {
         Text("${title}",textAlign = TextAlign.Center, modifier = Modifier
-            .fillMaxWidth().padding(8.dp),
+            .fillMaxWidth()
+            .padding(8.dp),
             style = MaterialTheme.typography.h5,
             )
         Divider(Modifier.height(2.dp))
@@ -56,13 +58,23 @@ fun SampleList(title:String,content:@Composable ()->Unit) {
 
 @Composable
 fun SampleItem(desc:String="",content: @Composable () -> Unit) {
-    if(desc.isNotEmpty()) {
-        Divider(Modifier.height(8.dp))
-        Text("${desc}",textAlign = TextAlign.Center, modifier = Modifier
-            .fillMaxWidth().padding(8.dp),
-            style = MaterialTheme.typography.h6,
-        )
+    Column() {
+        if(desc.isNotEmpty()) {
+            Divider(Modifier.height(8.dp))
+            Text("${desc}",textAlign = TextAlign.Left, modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+                style = MaterialTheme.typography.caption,
+            )
+        }
+        Divider(Modifier.height(2.dp))
+        Box(
+            Modifier.padding(8.dp)
+        ){
+            Column() {
+                content()
+            }
+        }
     }
-    Divider(Modifier.height(2.dp))
-    content()
+
 }
