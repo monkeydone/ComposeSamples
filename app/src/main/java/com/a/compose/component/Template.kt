@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -45,7 +46,7 @@ fun IconButton(text:String="",imageVector: ImageVector = Icons.Filled.Favorite,o
 
 @Composable
 fun SampleList(title:String,content:@Composable ()->Unit) {
-    Column {
+    Column(Modifier.padding(bottom = 16.dp)) {
         Text("${title}",textAlign = TextAlign.Center, modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
@@ -56,15 +57,17 @@ fun SampleList(title:String,content:@Composable ()->Unit) {
     }
 }
 
+
+
 @Composable
-fun SampleItem(desc:String="",content: @Composable () -> Unit) {
+fun SampleItem(desc:String="", style: TextStyle =MaterialTheme.typography.caption, content: @Composable () -> Unit) {
     Column() {
         if(desc.isNotEmpty()) {
             Divider(Modifier.height(8.dp))
             Text("${desc}",textAlign = TextAlign.Left, modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp),
-                style = MaterialTheme.typography.caption,
+                style = style
             )
         }
         Divider(Modifier.height(2.dp))

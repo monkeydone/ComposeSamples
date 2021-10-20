@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -19,6 +20,8 @@ import com.a.compose.component.SampleItem
 import com.a.compose.component.SampleList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 @Preview
 @Composable
@@ -54,11 +57,12 @@ fun ComposeFlowStateDemo(viewModel: ComposeViewModel) {
     val flowCount by viewModel.flowCount.collectAsState()
     val flowObjectState by viewModel.flowState.collectAsState()
     val flowListState by viewModel.flowListState.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
 
 
 
     Column {
-        SampleItem("Compose中的flow的例子") {
+        SampleItem("Compose中的flow的例子",style= MaterialTheme.typography.h5) {
         }
 
         SampleItem("基础类型") {
@@ -93,19 +97,14 @@ fun ComposeFlowStateDemo(viewModel: ComposeViewModel) {
 
 
         SampleItem("列表类型") {
-            IconButton("点我") {
-                flowListState.add(ComposeViewState("Flow List1", count = 0))
-                val list = ArrayList<ComposeViewState>()
-                list.addAll(flowListState)
-//                viewModel.flowListState.value.add(ComposeViewState("Flow List1", count = 0))
-                viewModel.flowListState.value = list
-            }
             for(j in flowListState.toList().indices) {
                 val i = flowListState[j]
                 Text("${j} ${i.name} ${i.count}",modifier = Modifier
                     .padding(all = 8.dp))
             }
-
+            IconButton("点我") {
+                viewModel.updateFlowList(ComposeViewState("列表Item"))
+            }
         }
 
     }
@@ -127,7 +126,7 @@ fun ComposeStateDemo(viewModel: ComposeViewModel) {
     }
     
     Column() {
-        SampleItem("Compose中的remember例子") {
+        SampleItem("Compose中的remember例子",style= MaterialTheme.typography.h5) {
         }
 
         SampleItem("基础类型") {
@@ -183,6 +182,14 @@ class ComposeViewModel:ViewModel() {
         _flowState.value =  ComposeViewState("点击响应",count = flowState.value.count+1)
     }
     val flowListState = MutableStateFlow(ArrayList<ComposeViewState>())
+
+
+    fun updateFlowList(data:ComposeViewState) {
+        val list = ArrayList<ComposeViewState>()
+        list.addAll(flowListState.value)
+        list.add(data)
+        flowListState.value = list
+    }
 
     val list = ArrayList<String>().apply {
         add("list1")
