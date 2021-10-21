@@ -110,6 +110,9 @@ fun AndroidNavGraph(
                 closeDrawer = {  }
             )
         }
+
+        composable("composeEmptyPlace") {
+        }
     }
 }
 

@@ -60,19 +60,19 @@ class RepoMenuImpl:PepoMenu {
             add(Menu("Room", RoutePath.PATH_DB, Icons.Filled.Build) {
                 DbDemo()
             })
-            add(Menu(RouteName.NAME_MERGE, RoutePath.PATH_MERGE, Icons.Filled.List) {
+            add(Menu(RouteName.NAME_MERGE, RoutePath.PATH_MERGE, Icons.Filled.List,{
+                val context = it
+                context.startActivity(Intent(context,MainActivity2::class.java))
+            }) {
                 PlaceView(
                     RoutePath.PATH_MERGE
                 )
             })
-//            add(Menu(RouteName.NAME_LIFE, RoutePath.PATH_LIFE, Icons.Filled.List) {
-//                ComposeLifeDemo()
-//            })
+            add(Menu(RouteName.NAME_LIFE, RoutePath.PATH_LIFE, Icons.Filled.List) {
+                ComposeLifeDemo()
+            })
 
-            add(Menu(RouteName.NAME_DIALOG, RoutePath.PATH_DIALOG, Icons.Filled.List,{
-                val context = it
-                context.startActivity(Intent(context,MainActivity2::class.java))
-            }) {
+            add(Menu(RouteName.NAME_DIALOG, RoutePath.PATH_DIALOG, Icons.Filled.List) {
                 DialogDemo()
             })
         }
