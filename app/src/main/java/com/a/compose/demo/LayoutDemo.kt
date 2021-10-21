@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -21,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
@@ -28,6 +30,7 @@ import androidx.compose.ui.unit.min
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 import com.a.compose.R
+import com.a.compose.component.SampleItem
 import kotlin.math.roundToInt
 
 
@@ -531,10 +534,74 @@ fun LayoutCompose(){
             CustomChart()
             Divider(modifier = Modifier.height(16.dp))
             ChartDataPreview()
+            SampleItem("ChatItem1") {
+               ChatItemBubble(message = "这是一个聊天框", lastMessageByAuthor = true )
+            }
+
+            SampleItem("ChatItem2") {
+                ChatItemBubble(message = "这是另外一个聊天框", lastMessageByAuthor = true )
+            }
         }
 
 
     }
 }
 
+@Composable
+fun ChatItemBubble(
+    message: String,
+    lastMessageByAuthor: Boolean,
+) {
+    val ChatBubbleShape = RoundedCornerShape(0.dp, 8.dp, 8.dp, 0.dp)
+    val LastChatBubbleShape = RoundedCornerShape(0.dp, 8.dp, 8.dp, 8.dp)
+
+    val backgroundBubbleColor =
+        if (MaterialTheme.colors.isLight) {
+            Color(0xFFF5F5F5)
+        } else {
+            MaterialTheme.colors.elevatedSurface(2.dp)
+        }
+
+    val bubbleShape = if (lastMessageByAuthor) LastChatBubbleShape else ChatBubbleShape
+    Column {
+        Surface(color = backgroundBubbleColor, shape = bubbleShape) {
+            DayHeader(message)
+        }
+
+            Spacer(modifier = Modifier.height(4.dp))
+            Surface(color = backgroundBubbleColor, shape = bubbleShape) {
+                Image(
+                    painter = painterResource(R.drawable.ic_crane_drawer),
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier.size(160.dp),
+                    contentDescription = ""
+                )
+            }
+    }
+}
+@Composable
+fun Colors.elevatedSurface(elevation: Dp): Color {
+    return LocalElevationOverlay.current?.apply(
+        color = this.surface,
+        elevation = elevation
+    ) ?: this.surface
+}
+
+
+@Composable
+fun DayHeader(dayString: String) {
+    Row(
+        modifier = Modifier
+            .padding(vertical = 8.dp, horizontal = 16.dp)
+            .height(16.dp)
+    ) {
+        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+            Text(
+                text = dayString,
+                modifier = Modifier.padding(horizontal = 16.dp),
+                style = MaterialTheme.typography.overline
+            )
+        }
+    }
+}
 

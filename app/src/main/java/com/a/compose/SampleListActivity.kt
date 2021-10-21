@@ -143,8 +143,8 @@ fun LeftMenu(
                 label = i.name,
                 isSelected = currentRoute == i.routePath,
                 action = {
-                    if(i.routePath == RoutePath.PATH_MERGE) {
-                        context.startActivity(Intent(context,MainActivity2::class.java))
+                    if(i.action != null) {
+                        i.action?.invoke(context)
                     }else {
                         navController.navigate(i.routePath)
 //                        navController.popBackStack()

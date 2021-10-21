@@ -1,5 +1,7 @@
 package com.a.compose
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -14,10 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
-import com.a.compose.demo.DbDemo
-import com.a.compose.demo.DialogDemo
-import com.a.compose.demo.LayoutCompose
-import com.a.compose.demo.NetworkDemo
+import com.a.compose.demo.*
 
 
 interface PepoMenu {
@@ -43,9 +42,6 @@ class RepoMenuImpl:PepoMenu {
                TextDemo()
             })
             add(Menu(RouteName.NAME_STATE, RoutePath.PATH_STATE, Icons.Filled.List) {
-//                PlaceView(
-//                    RoutePath.PATH_STATE
-//                )
                 StateDemo()
             })
             add(Menu(RouteName.NAME_GESTURE, RoutePath.PATH_GESTURE, Icons.Filled.DateRange) {
@@ -69,19 +65,22 @@ class RepoMenuImpl:PepoMenu {
                     RoutePath.PATH_MERGE
                 )
             })
-            add(Menu(RouteName.NAME_DIALOG, RoutePath.PATH_DIALOG, Icons.Filled.List) {
+//            add(Menu(RouteName.NAME_LIFE, RoutePath.PATH_LIFE, Icons.Filled.List) {
+//                ComposeLifeDemo()
+//            })
+
+            add(Menu(RouteName.NAME_DIALOG, RoutePath.PATH_DIALOG, Icons.Filled.List,{
+                val context = it
+                context.startActivity(Intent(context,MainActivity2::class.java))
+            }) {
                 DialogDemo()
             })
-
-//            add(Menu("混合代码", RoutePath.PATH_MERGE, Icons.Filled.Build) {
-//                DbDemo()
-//            })
         }
     }
 
 }
 
-data class Menu(val name:String, val routePath:String, val icon: ImageVector,val view:@Composable ()->Unit)
+data class Menu(val name:String, val routePath:String, val icon: ImageVector, var action:((context: Context)->Unit)? = null, val view:@Composable ()->Unit)
 
 object RoutePath {
     const val PATH_HOME = "home"
@@ -97,6 +96,7 @@ object RoutePath {
     const val PATH_DB = "db"
     const val PATH_MERGE = "merge"
     const val PATH_DIALOG = "dialog"
+    const val PATH_LIFE = "life"
 }
 
 object RouteName {
@@ -108,6 +108,7 @@ object RouteName {
     const val NAME_NETWORK = "网络"
     const val NAME_MERGE = "混合代码"
     const val NAME_DIALOG = "对话框"
+    const val NAME_LIFE = "生命周期"
 }
 
 @Preview()
