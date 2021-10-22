@@ -31,6 +31,10 @@ import kotlinx.coroutines.delay
 @Composable
 fun ComposeLifeDemo() {
     SampleList(title = "生命周期和高级状态的例子") {
+        SampleItem("生命周期测试2") {
+            LifeDemoTest2()
+        }
+
         SampleItem("CompositionLocal的例子") {
             CompositionLocalDemo()
         }
@@ -49,6 +53,23 @@ fun ComposeLifeDemo() {
 
 }
 
+
+@Composable
+fun LifeDemoTest2() {
+    var hide by remember {
+        mutableStateOf(false)
+    }
+    Column() {
+        EffectCountV2(text = "点击") {
+            hide = !hide
+        }
+        if(!hide){
+            EffectCountV2(text = "隐藏")
+        }
+
+    }
+    
+}
 
 
 @Composable
@@ -223,6 +244,27 @@ fun LifeDemo() {
 }
 
 @Composable
+fun EffectCountV2(text:String,onClick:()->Unit = {}) {
+    
+    LaunchedEffect(true) {
+       println("LaunchedEffect ${text}")
+    }
+
+    DisposableEffect(true ) {
+        onDispose {
+           println("DisposableEffect ${text}")
+        }
+    }
+    
+    SideEffect {
+        println("SideEffect ${text}")
+    }
+    com.a.compose.component.IconButton(text = text,onClick = onClick)
+
+}
+
+
+@Composable
 fun EffectCount(mutableState:String) {
     var text by remember {
         mutableStateOf(mutableState)
@@ -240,9 +282,9 @@ fun EffectCount(mutableState:String) {
         }
     }
 //
-//    SideEffect {
-//        text += "EffectCount update\n"
-//    }
+    SideEffect {
+        text += "EffectCount update\n"
+    }
 
 
     Text(text = text,modifier = Modifier.clickable {
