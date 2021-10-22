@@ -193,7 +193,7 @@ fun AnnotatedStringAddStringAnnotationSample() {
 @Preview
 @Composable
 fun TextDemo() {
-    SampleList(title = "Text Demo") {
+    SampleList(title = "Text Demo",hasLazyColumn = true) {
         LazyColumn {
             item {
 

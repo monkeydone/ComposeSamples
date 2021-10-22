@@ -3,6 +3,8 @@ package com.a.compose.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -45,8 +47,14 @@ fun IconButton(text:String="",imageVector: ImageVector = Icons.Filled.Favorite,o
 }
 
 @Composable
-fun SampleList(title:String,content:@Composable ()->Unit) {
-    Column(Modifier.padding(bottom = 16.dp)) {
+fun SampleList(title:String,hasLazyColumn:Boolean = false,content:@Composable ()->Unit) {
+    val modifier = Modifier.padding(bottom = 16.dp)
+    if(!hasLazyColumn) {
+        modifier.verticalScroll(
+            state = rememberScrollState()
+        )
+    }
+    Column(modifier = modifier) {
         Text("${title}",textAlign = TextAlign.Center, modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
@@ -54,6 +62,7 @@ fun SampleList(title:String,content:@Composable ()->Unit) {
             )
         Divider(Modifier.height(2.dp))
         content()
+
     }
 }
 

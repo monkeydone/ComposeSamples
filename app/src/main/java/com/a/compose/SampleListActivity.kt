@@ -71,10 +71,13 @@ class SampleListActivity : ComponentActivity() {
                         }
                     ) {
                         Box{
-                            com.a.compose.component.IconButton("返回"){
-                                navController.popBackStack()
+                            Column() {
+//                                com.a.compose.component.IconButton("返回"){
+//                                    navController.popBackStack()
+//                                }
+                                AndroidNavGraph(navController = navController,scaffoldState = scaffoldState)
                             }
-                            AndroidNavGraph(navController = navController,scaffoldState = scaffoldState)
+
                         }
                     }
                 }
