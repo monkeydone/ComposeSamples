@@ -1,5 +1,6 @@
 package com.a.compose.demo
 
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -34,6 +35,9 @@ fun ComposeLifeDemo() {
         SampleItem("生命周期测试2") {
             LifeDemoTest2()
         }
+        SampleItem("updateState") {
+            ParentComposableV2()
+        }
 
         SampleItem("CompositionLocal的例子") {
             CompositionLocalDemo()
@@ -59,17 +63,117 @@ fun LifeDemoTest2() {
     var hide by remember {
         mutableStateOf(false)
     }
-    Column() {
+
+    Column {
         EffectCountV2(text = "点击") {
             hide = !hide
         }
         if(!hide){
+            Divider(Modifier.height(2.dp))
             EffectCountV2(text = "隐藏")
         }
+
+        Divider(Modifier.height(2.dp))
+        EffectCountV2(text = "显示变量 ${hide}")
+
 
     }
     
 }
+
+@Composable
+fun MyComposable(callback: () -> Unit ) {
+    val text = "MyComposable"
+    LaunchedEffect(true) {
+        println("LaunchedEffect ${text}")
+    }
+
+    DisposableEffect(true ) {
+        onDispose {
+            println("DisposableEffect ${text}")
+        }
+    }
+
+    SideEffect {
+        println("SideEffect ${text}")
+    }
+    Button( onClick = { callback() }) {
+        Text("click")
+    }
+}
+
+@Composable
+fun MyComposableV2(callback: () -> Unit) {
+
+    val text = "MyComposableV2"
+    LaunchedEffect(true) {
+        println("LaunchedEffect ${text}")
+    }
+
+    DisposableEffect(true ) {
+        onDispose {
+            println("DisposableEffect ${text}")
+        }
+    }
+
+    SideEffect {
+        println("SideEffect ${text}")
+    }
+
+    val callbackRemembered by remember { mutableStateOf(callback) }
+    Button(onClick = { callbackRemembered() }) {
+        Text("click")
+    }
+}
+
+@Composable
+fun MyComposableV3(callback: () -> Unit) {
+
+    val text = "MyComposableV3"
+    LaunchedEffect(true) {
+        println("LaunchedEffect ${text}")
+    }
+
+    DisposableEffect(true ) {
+        onDispose {
+            println("DisposableEffect ${text}")
+        }
+    }
+
+    SideEffect {
+        println("SideEffect ${text}")
+    }
+
+
+    val callbackRemembered by rememberUpdatedState(callback)
+
+    Button(onClick = { callbackRemembered() }) {
+        Text("click")
+    }
+}
+
+@Composable
+fun ParentComposableV2() {
+    Column() {
+        var count by remember { mutableStateOf(0) }
+        var callback by remember { mutableStateOf({
+            println("MyComposable: callback init")
+            Unit
+        }) }
+
+        MyComposable(callback)
+        MyComposableV2(callback)
+        MyComposableV3(callback)
+
+
+        // parentBtn
+        Button(onClick = { count++ }) {
+            Text("Change")
+            callback = { println("MyComposable: callback $count") }
+        }
+    }
+}
+
 
 
 @Composable
