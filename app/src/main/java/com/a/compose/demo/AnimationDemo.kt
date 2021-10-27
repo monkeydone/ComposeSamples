@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import com.a.compose.component.SampleItem
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -96,6 +97,20 @@ private fun HomeFloatingActionButtonV2(
 }
 
 @Composable
+fun ColorDemoV2() {
+
+    val animateValue by rememberInfiniteTransition().animateFloat(
+        initialValue = 0f, targetValue = 0.7f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 1500),
+            repeatMode = RepeatMode.Reverse,
+        ),
+    )
+    Text("这个一段测试代码",modifier = Modifier.background(Color.Black.copy(alpha = animateValue)))
+
+}
+
+@Composable
 fun ColorDemo() {
     var colorFlag by remember {
         mutableStateOf(true)
@@ -110,9 +125,12 @@ fun ColorDemo() {
         .background(backgroundColor)
         .clickable {
             colorFlag = !colorFlag
-        })
+        }) {
+        Text("点击修改颜色，设置间隔时间")
+    }
 
 }
+
 
 
 
@@ -264,7 +282,8 @@ fun GestureDemoV2() {
     val offset = remember { Animatable(Offset(0f, 0f), Offset.VectorConverter) }
     Box(
         modifier = Modifier
-            .size(200.dp)
+            .fillMaxWidth()
+            .height(50.dp)
             .pointerInput(Unit) {
                 coroutineScope {
                     while (true) {
@@ -280,7 +299,9 @@ fun GestureDemoV2() {
                 }
             }
     ) {
-        Text(text="Text",modifier = Modifier.border(BorderStroke(2.dp,Color.Blue)).offset { offset.value.toIntOffset() })
+        Text(text="点击空白处",modifier = Modifier
+            .border(BorderStroke(2.dp, Color.Blue))
+            .offset { offset.value.toIntOffset() })
     }
 }
 
@@ -299,7 +320,10 @@ fun AnimatableDemo() {
     Box(
         Modifier
             .size(100.dp)
-            .background(color.value))
+            .background(color.value)
+            .clickable {
+                enabled = !enabled
+            })
     
 }
 
@@ -317,10 +341,11 @@ fun AnimatingBoxDemo() {
             .background(transitionData.color)
             .size(transitionData.size)
             .clickable {
-                boxState = if (boxState == BoxState.Collapsed) BoxState.Expanded else BoxState.Collapsed
+                boxState =
+                    if (boxState == BoxState.Collapsed) BoxState.Expanded else BoxState.Collapsed
             }
     ){
-       Text("color:${transitionData.size},dp:${transitionData.color.toArgb()}")
+       Text("点击我修改 color:${transitionData.size},dp:${transitionData.color.toArgb()}")
     }
 }
 
@@ -391,8 +416,8 @@ fun PressedSurface() {
 
     val width by transition.animateDp { state ->
         when (state) {
-            SurfaceState.Released -> 20.dp
-            SurfaceState.Pressed -> 50.dp
+            SurfaceState.Released -> 50.dp
+            SurfaceState.Pressed -> 90.dp
         }
     }
     val surfaceColor by transition.animateColor { state ->
@@ -412,8 +437,10 @@ fun PressedSurface() {
         color = surfaceColor.copy(alpha = selectedAlpha),
         modifier = Modifier
             .toggleable(value = pressed, onValueChange = onPress)
-            .size(height = 200.dp, width = width)
-    ){}
+            .size(height = 100.dp, width = width)
+    ){
+        Text("点击")
+    }
 }
 
 @Preview
@@ -439,7 +466,7 @@ fun TransitionDemo() {
         Column(modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)) {
-            Text(text = "Hello, world!")
+            Text(text = "Hello, world! 点我")
             // AnimatedVisibility as a part of the transition.
             transition.AnimatedVisibility(
                 visible = { targetSelected -> targetSelected },
@@ -497,43 +524,63 @@ fun AnimationDemo() {
         }
         item{
             var extended by remember { mutableStateOf(true)}
-            GestureDemoV2()
-            Divider(Modifier.height(2.dp))
-            AnimatingBoxDemo()
-            Divider(Modifier.height(2.dp))
-            CircleAnimDemo()
-            Divider(Modifier.height(2.dp))
-            PressedSurface()
-            Divider(Modifier.height(2.dp))
-            TransitionDemo()
-            Divider(Modifier.height(2.dp))
-            AnimatableDemo()
-            Divider(Modifier.height(2.dp))
-            FloatValueDemo()
-            Divider(Modifier.height(2.dp))
-            CrossfadeDemo()
-            Divider(Modifier.height(2.dp))
-            ContentSizeDemo()
-            Divider(Modifier.height(2.dp))
-            AnimatedContentDemoV2()
-            Divider(Modifier.height(2.dp))
-            AnimatedContentDemo()
-            Divider(Modifier.height(2.dp))
-            HomeFloatingActionButton(extended = extended){
-                extended = !extended
+            SampleItem("视图移动方式") {
+                GestureDemoV2()
+            }
+            SampleItem("循环调整颜色") {
+                ColorDemoV2()
+            }
+            SampleItem("多个参数的动画修改") {
+                AnimatingBoxDemo()
+            }
+            SampleItem("循环设置大小") {
+                CircleAnimDemo()
+            }
+            SampleItem("点击设置大小") {
+                PressedSurface()
+            }
+            SampleItem("不同的视图切换") {
+                TransitionDemo()
             }
             Divider(Modifier.height(2.dp))
-            HomeFloatingActionButton(false){
+            SampleItem("点击修改颜色") {
+                AnimatableDemo()
+            }
+            SampleItem("点击获取动画差值") {
+                FloatValueDemo()
+            }
+            SampleItem("点击使用Crossfade切换文字") {
+                CrossfadeDemo()
+            }
+            SampleItem("点击切换内容大小") {
+                ContentSizeDemo()
+            }
+            SampleItem("AnimatedContent修改内容") {
+                AnimatedContentDemoV2()
+            }
+            SampleItem("AnimatedContent实现上划动画"){
+                AnimatedContentDemo()
+            }
+            SampleItem("按钮动画") {
+                HomeFloatingActionButton(extended = extended){
+                    extended = !extended
+                }
+                Divider(Modifier.height(2.dp))
+                HomeFloatingActionButton(false){
 
-            }
-            Divider(Modifier.height(2.dp))
-            HomeFloatingActionButtonV2(extended = extended) {
+                }
+                Divider(Modifier.height(2.dp))
+                HomeFloatingActionButtonV2(extended = extended) {
 
+                }
+                Divider(Modifier.height(2.dp))
+                Divider(Modifier.height(2.dp))
+                FullScreenNotification(visible = extended)
             }
-            Divider(Modifier.height(2.dp))
-            ColorDemo()
-            Divider(Modifier.height(2.dp))
-            FullScreenNotification(visible = extended)
+
+            SampleItem("间隔时间设置") {
+                ColorDemo()
+            }
         }
     }
 

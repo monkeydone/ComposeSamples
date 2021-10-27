@@ -2,6 +2,7 @@ package com.a.compose
 
 import android.content.Context
 import android.content.Intent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -24,6 +25,7 @@ interface PepoMenu {
 }
 
 class RepoMenuImpl:PepoMenu {
+    @ExperimentalAnimationApi
     @ExperimentalMaterialApi
     override fun getMenuList(): List<Menu> {
         return ArrayList<Menu>().apply {
@@ -75,6 +77,10 @@ class RepoMenuImpl:PepoMenu {
             add(Menu(RouteName.NAME_DIALOG, RoutePath.PATH_DIALOG, Icons.Filled.List) {
                 DialogDemo()
             })
+
+            add(Menu("其他组件", RoutePath.PATH_OTHER, Icons.Filled.Build) {
+                ComponentDemo()
+            })
         }
     }
 
@@ -97,6 +103,7 @@ object RoutePath {
     const val PATH_MERGE = "merge"
     const val PATH_DIALOG = "dialog"
     const val PATH_LIFE = "life"
+    const val PATH_OTHER = "life"
 }
 
 object RouteName {
