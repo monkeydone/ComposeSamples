@@ -14,17 +14,22 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.a.compose.component.SampleItem
 import com.a.compose.component.SampleList
 import com.a.compose.ui.theme.ComposeTheme
+import com.a.compose.ui.theme.MyColor
 import java.util.*
 
 
@@ -36,9 +41,54 @@ fun ComponentDemo() {
         SampleItem("声音播放") {
             PlaySoundDemo()
         }
+        SampleItem("Column背景色") {
+            ColumnBackgroundDemo1()
+        }
+        SampleItem("Column背景色V2") {
+            ColumnBackgroundDemo2()
+        }
+        SampleItem("测试自定义颜色是否生效") {
+            Box(modifier = Modifier.size(40.dp).background(MyColor.color_gold_bg))
+        }
+
+        SampleItem("测试红色颜色是否生效") {
+            Box(modifier = Modifier.size(40.dp).background(Color.Red))
+        }
+
     }
 }
 
+@Composable
+fun NavigationDemo(text:String = "text") {
+    Box(modifier = Modifier.background(Color.Blue).height(44.dp)) {
+        Icon(
+            imageVector = Icons.Default.ArrowBack,
+            contentDescription = null,
+            modifier = Modifier.size(ButtonDefaults.IconSize).fillMaxHeight().background(Color.Red)
+        )
+
+        Text(text = text,modifier = Modifier.fillMaxWidth().fillMaxHeight().background(Color.Green),textAlign = TextAlign.Center)
+    }
+
+}
+
+@Composable
+fun ColumnBackgroundDemo1() {
+    Column(modifier = Modifier
+        .size(40.dp)
+        .background(Color.Red)) {
+
+    }
+}
+
+@Composable
+fun ColumnBackgroundDemo2() {
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .background(Color.Red)) {
+        NavigationDemo("这是一个标题")
+    }
+}
 
 
 @Composable
