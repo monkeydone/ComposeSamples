@@ -1,6 +1,7 @@
 package com.a.compose.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
@@ -69,12 +70,15 @@ fun SampleList(title:String,hasLazyColumn:Boolean = false,content:@Composable ()
 
 
 @Composable
-fun SampleItem(desc:String="", style: TextStyle =MaterialTheme.typography.caption, content: @Composable () -> Unit) {
+fun SampleItem(desc:String="", style: TextStyle =MaterialTheme.typography.caption,onClick: () -> Unit = {}, content: @Composable () -> Unit) {
     Column() {
         if(desc.isNotEmpty()) {
             Divider(Modifier.height(8.dp))
             Text("${desc}",textAlign = TextAlign.Left, modifier = Modifier
                 .fillMaxWidth()
+                .clickable {
+                    onClick()
+                }
                 .padding(8.dp),
                 style = style
             )
