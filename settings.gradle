@@ -8,3 +8,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "compose"
 include ':app'
+include ':ComposeTools'
+include ':composesample'

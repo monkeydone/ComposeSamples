@@ -71,11 +71,8 @@ fun DialogDemo() {
 
 @Composable
 fun ProgressDialog() {
-    var showDialog by remember { mutableStateOf(true) }
-
-    if (showDialog) {
         Dialog(
-            onDismissRequest = { showDialog = false },
+            onDismissRequest = {  },
             DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
         ) {
             Box(
@@ -87,8 +84,6 @@ fun ProgressDialog() {
                 CircularProgressIndicator()
             }
         }
-    }
-
 }
 
 @Composable

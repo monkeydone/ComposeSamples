@@ -22,11 +22,13 @@ import coil.network.HttpException
 import com.a.compose.ComposeApplication
 import com.a.compose.Graph
 import com.a.compose.MainDestinations
+import com.a.compose.component.IconButton
 import com.a.compose.component.SampleItem
 import com.a.compose.component.SampleList
 import com.a.compose.repo.NetworkService
 import com.a.compose.repo.Plant
 import com.a.compose.utils.await
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.CacheControl
@@ -41,14 +43,27 @@ import java.util.concurrent.TimeUnit
 fun NetworkDemo() {
     val viewModel = PlantViewModel()
 
-    val progressState = viewModel.liveProgress.observeAsState(false)
+    val progressState by viewModel.liveProgress.observeAsState(false)
     SampleList(title = "网络测试") {
         FetchData()
         ListObjectFetchUrl(viewModel)
+        ProgressDemo(viewModel = viewModel)
     }
-    if(progressState.value) {
+    if(progressState) {
        ProgressDialog()
     }
+}
+
+@Composable
+fun ProgressDemo(viewModel: PlantViewModel) {
+    SampleItem("显示进度Demo", onClick = {}) {
+      IconButton("点击显示按钮"){
+          viewModel.dialogTest()
+      }
+
+    }
+
+
 }
 
 @Composable
@@ -139,6 +154,14 @@ class PlantViewModel:ViewModel() {
     val livePlants = MutableLiveData<List<Plant>>()
     val liveProgress = MutableLiveData<Boolean>()
 
+
+    fun dialogTest(){
+        viewModelScope.launch {
+            liveProgress.value = true
+//            delay(1000)
+            liveProgress.value = false
+        }
+    }
 
     fun fetchPlants() {
         viewModelScope.launch {
